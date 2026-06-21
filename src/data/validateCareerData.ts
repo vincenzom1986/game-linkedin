@@ -52,6 +52,10 @@ export function assertCareerData(value: unknown): asserts value is CareerData {
     text(entry.summary, path + '.summary')
     textArray(entry.activities, path + '.activities')
     text(entry.experience, path + '.experience')
+    if (entry.tools !== undefined) {
+      if (!Array.isArray(entry.tools)) throw new Error(path + '.tools must be an array')
+      entry.tools.forEach((tool, toolIndex) => text(tool, path + '.tools[' + toolIndex + ']'))
+    }
 
     object(entry.logo, path + '.logo')
     text(entry.logo.key, path + '.logo.key')
@@ -65,6 +69,9 @@ export function assertCareerData(value: unknown): asserts value is CareerData {
       object(skill, path + '.skills[' + skillIndex + ']')
       text(skill.id, path + '.skills[' + skillIndex + '].id')
       text(skill.name, path + '.skills[' + skillIndex + '].name')
+      if (skill.icon !== undefined) {
+        text(skill.icon, path + '.skills[' + skillIndex + '].icon')
+      }
     })
 
     object(entry.district, path + '.district')

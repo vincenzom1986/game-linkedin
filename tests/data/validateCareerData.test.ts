@@ -65,4 +65,28 @@ describe('assertCareerData', () => {
     const invalid = { ...validCareer, contact: { ...validCareer.contact, phone: '+39 000' } }
     expect(() => assertCareerData(invalid)).toThrow('contact contains forbidden field: phone')
   })
+
+  it('rifiuta strumenti vuoti', () => {
+    const invalid = {
+      ...validCareer,
+      locations: [{ ...validCareer.locations[0]!, tools: ['Social listening', ''] }],
+    }
+    expect(() => assertCareerData(invalid))
+      .toThrow('locations[0].tools[1] must be a non-empty string')
+  })
+
+  it('rifiuta icone skill vuote', () => {
+    const invalid = {
+      ...validCareer,
+      locations: [{
+        ...validCareer.locations[0]!,
+        skills: [
+          { ...validCareer.locations[0]!.skills[0]!, icon: ' ' },
+          validCareer.locations[0]!.skills[1]!,
+        ],
+      }],
+    }
+    expect(() => assertCareerData(invalid))
+      .toThrow('locations[0].skills[0].icon must be a non-empty string')
+  })
 })
