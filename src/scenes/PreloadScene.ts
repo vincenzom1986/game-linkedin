@@ -12,6 +12,7 @@ export class PreloadScene extends Phaser.Scene {
   create(): void {
     this.createHeroTexture()
     this.createStudioTexture()
+    this.scene.start('world')
   }
 
   private createHeroTexture(): void {

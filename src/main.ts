@@ -5,9 +5,11 @@ import { assertCareerData } from './data/validateCareerData'
 import { createGameConfig } from './game/createGameConfig'
 import { BootScene } from './scenes/BootScene'
 import { PreloadScene } from './scenes/PreloadScene'
+import { UIScene } from './scenes/UIScene'
+import { WorldScene } from './scenes/WorldScene'
 
 assertCareerData(careerData)
 new Phaser.Game({
   ...createGameConfig('game'),
-  scene: [BootScene, PreloadScene],
+  scene: [BootScene, PreloadScene, WorldScene, UIScene],
 })
