@@ -4,43 +4,40 @@ export interface CareerData {
   contact: Contact
 }
 
+export interface LogoAsset {
+  key: string
+  path: string
+  alt: string
+}
+
+export interface DistrictTheme {
+  id: string
+  label: string
+  palette: [string, string, string]
+  landmark: string
+}
+
 export interface Location {
   id: string
   name: string
-  kind: 'education' | 'work'
+  kind: 'work'
+  order: number
   building: string
+  logo: LogoAsset
   period: string
-  role?: string
+  role: string
   summary: string
-  projects?: InfoEntry[]
-  skills?: Skill[]
-  npcs?: Npc[]
-  objects?: InteractiveObject[]
-}
-
-export interface InfoEntry {
-  label: string
-  body: string
+  activities: string[]
+  experience: string
+  skills: Skill[]
+  tools?: string[]
+  district: DistrictTheme
 }
 
 export interface Skill {
   id: string
   name: string
   icon?: string
-}
-
-export interface Npc {
-  id: string
-  name: string
-  sprite: string
-  lines: string[]
-}
-
-export interface InteractiveObject {
-  id: string
-  label: string
-  type: 'project' | 'role' | 'education' | 'achievement' | 'note'
-  body: string
 }
 
 export interface Contact {
