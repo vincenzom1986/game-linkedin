@@ -1,6 +1,7 @@
 import Phaser from 'phaser'
 import type { Location } from '../data/types'
 import { formatLocationPanel } from '../ui/formatLocationPanel'
+import { TouchControls } from '../ui/TouchControls'
 
 export class UIScene extends Phaser.Scene {
   private prompt!: Phaser.GameObjects.Text
@@ -8,6 +9,7 @@ export class UIScene extends Phaser.Scene {
   private title!: Phaser.GameObjects.Text
   private meta!: Phaser.GameObjects.Text
   private body!: Phaser.GameObjects.Text
+  private touchControls!: TouchControls
 
   constructor() {
     super('ui')
@@ -28,6 +30,7 @@ export class UIScene extends Phaser.Scene {
       .setVisible(false)
 
     this.panel = this.createPanel()
+    this.touchControls = new TouchControls(this)
 
     this.game.events.on('interaction:prompt', this.onPrompt, this)
     this.game.events.on('location:show', this.showLocation, this)
@@ -92,16 +95,19 @@ export class UIScene extends Phaser.Scene {
     this.registry.set('panel-open', true)
     this.prompt.setVisible(false)
     this.panel.setVisible(true)
+    this.touchControls.setSuppressed(true)
   }
 
   private hidePanel(): void {
     this.registry.set('panel-open', false)
     this.panel.setVisible(false)
+    this.touchControls.setSuppressed(false)
   }
 
   private removeListeners(): void {
     this.game.events.off('interaction:prompt', this.onPrompt, this)
     this.game.events.off('location:show', this.showLocation, this)
     this.input.keyboard?.off('keydown-ESC', this.hidePanel, this)
+    this.touchControls.destroy()
   }
 }
