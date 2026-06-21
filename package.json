@@ -1,0 +1,20 @@
+{
+  "name": "game-linkedin",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "build": "tsc --noEmit && vite build"
+  },
+  "dependencies": {
+    "phaser": "^3.90.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vite": "^7.3.5",
+    "vitest": "^3.2.6"
+  }
+}
