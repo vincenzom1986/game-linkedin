@@ -64,7 +64,7 @@ tests/**/*.test.ts                 test Vitest della logica pura
 - Consumes: nessuna interfaccia applicativa precedente.
 - Produces: `CareerData`, `Location`, `Skill`, `assertCareerData(value: unknown): asserts value is CareerData`.
 
-- [ ] **Step 1: Inizializzare il toolchain senza codice di produzione**
+- [x] **Step 1: Inizializzare il toolchain senza codice di produzione**
 
 Run:
 
@@ -140,7 +140,7 @@ Creare `index.html`:
 </html>
 ```
 
-- [ ] **Step 2: Scrivere il test fallente del contratto dati**
+- [x] **Step 2: Scrivere il test fallente del contratto dati**
 
 Creare `tests/data/validateCareerData.test.ts`:
 
@@ -188,13 +188,13 @@ describe('assertCareerData', () => {
 })
 ```
 
-- [ ] **Step 3: Eseguire il test e verificare RED**
+- [x] **Step 3: Eseguire il test e verificare RED**
 
 Run: `npm test -- tests/data/validateCareerData.test.ts`
 
 Expected: FAIL perché `src/data/validateCareerData.ts` non esiste.
 
-- [ ] **Step 4: Implementare tipi e validazione minima**
+- [x] **Step 4: Implementare tipi e validazione minima**
 
 Creare `src/data/types.ts`:
 
@@ -278,7 +278,7 @@ export function assertCareerData(value: unknown): asserts value is CareerData {
 }
 ```
 
-- [ ] **Step 5: Verificare GREEN e committare**
+- [x] **Step 5: Verificare GREEN e committare**
 
 Run: `npm test -- tests/data/validateCareerData.test.ts`
 
@@ -303,7 +303,7 @@ git commit -m "build: scaffold Game-LinkedIn data layer"
 - Consumes: `CareerData`, `assertCareerData`.
 - Produces: `careerData: CareerData`, `JournalState.discoverLocation(id)`, `JournalState.collectSkill(id)`, snapshot immutabile.
 
-- [ ] **Step 1: Scrivere i test fallenti**
+- [x] **Step 1: Scrivere i test fallenti**
 
 Creare `tests/data/career.test.ts`:
 
@@ -341,13 +341,13 @@ describe('JournalState', () => {
 })
 ```
 
-- [ ] **Step 2: Verificare RED**
+- [x] **Step 2: Verificare RED**
 
 Run: `npm test -- tests/data/career.test.ts tests/systems/JournalState.test.ts`
 
 Expected: FAIL perché entrambi i moduli non esistono.
 
-- [ ] **Step 3: Implementare contenuto e stato minimo**
+- [x] **Step 3: Implementare contenuto e stato minimo**
 
 Creare `src/data/career.ts`:
 
@@ -402,7 +402,7 @@ export class JournalState {
 }
 ```
 
-- [ ] **Step 4: Verificare GREEN e committare**
+- [x] **Step 4: Verificare GREEN e committare**
 
 Run: `npm test -- tests/data/career.test.ts tests/systems/JournalState.test.ts`
 
@@ -427,7 +427,7 @@ git commit -m "feat: add demo career and journal state"
 - Consumes: `CareerData`, Tiled property `{ name: 'refId', value: string }`.
 - Produces: `resolveLocationRef(object, careerData): Location`, `nearestInteraction(origin, targets, maxDistance)`.
 
-- [ ] **Step 1: Scrivere i test fallenti**
+- [x] **Step 1: Scrivere i test fallenti**
 
 Creare `tests/systems/WorldResolver.test.ts`:
 
@@ -467,13 +467,13 @@ it('non propone bersagli fuori portata', () => {
 })
 ```
 
-- [ ] **Step 2: Verificare RED**
+- [x] **Step 2: Verificare RED**
 
 Run: `npm test -- tests/systems/WorldResolver.test.ts tests/systems/InteractionSystem.test.ts`
 
 Expected: FAIL per moduli mancanti.
 
-- [ ] **Step 3: Implementare i due sistemi puri**
+- [x] **Step 3: Implementare i due sistemi puri**
 
 Creare `src/systems/WorldResolver.ts`:
 
@@ -509,7 +509,7 @@ export function nearestInteraction<T extends InteractionTarget>(
 }
 ```
 
-- [ ] **Step 4: Verificare GREEN e committare**
+- [x] **Step 4: Verificare GREEN e committare**
 
 Run: `npm test -- tests/systems/WorldResolver.test.ts tests/systems/InteractionSystem.test.ts`
 
@@ -532,7 +532,7 @@ git commit -m "feat: resolve map references and interactions"
 - Consumes: assi grezzi `x`, `y` nell'intervallo `[-1, 1]`.
 - Produces: `movementVector(x, y, speed)` con velocità diagonale normalizzata.
 
-- [ ] **Step 1: Scrivere il test fallente**
+- [x] **Step 1: Scrivere il test fallente**
 
 ```ts
 import { expect, it } from 'vitest'
@@ -548,13 +548,13 @@ it('restituisce zero senza input', () => {
 })
 ```
 
-- [ ] **Step 2: Verificare RED**
+- [x] **Step 2: Verificare RED**
 
 Run: `npm test -- tests/systems/MovementSystem.test.ts`
 
 Expected: FAIL per modulo mancante.
 
-- [ ] **Step 3: Implementare e verificare GREEN**
+- [x] **Step 3: Implementare e verificare GREEN**
 
 ```ts
 export function movementVector(x: number, y: number, speed: number): { x: number; y: number } {
@@ -591,7 +591,7 @@ git commit -m "feat: normalize player movement"
 - Consumes: chiavi scena `boot`, `preload`, `world`, `ui`; mount DOM `#game`.
 - Produces: `createGameConfig(parent): Phaser.Types.Core.GameConfig`, tilemap `first-location` e texture `hero`/`studio`.
 
-- [ ] **Step 1: Scrivere il test fallente della configurazione**
+- [x] **Step 1: Scrivere il test fallente della configurazione**
 
 ```ts
 import { expect, it } from 'vitest'
@@ -605,13 +605,13 @@ it('crea un gioco responsive con fisica arcade', () => {
 })
 ```
 
-- [ ] **Step 2: Verificare RED**
+- [x] **Step 2: Verificare RED**
 
 Run: `npm test -- tests/game/createGameConfig.test.ts`
 
 Expected: FAIL per modulo mancante.
 
-- [ ] **Step 3: Creare mappa Tiled e crediti**
+- [x] **Step 3: Creare mappa Tiled e crediti**
 
 `public/maps/first-location.json` deve essere JSON Tiled 1.10 con dimensione `30x20`, tile `32x32` e due object layer:
 
@@ -658,7 +658,7 @@ La prima vertical slice non incorpora asset di terze parti. Terreno, edificio e 
 sono forme pixel-art originali generate a runtime da Phaser. Nessun asset Nintendo viene usato.
 ```
 
-- [ ] **Step 4: Implementare configurazione e scene di avvio**
+- [x] **Step 4: Implementare configurazione e scene di avvio**
 
 `createGameConfig` deve impostare `Phaser.AUTO`, sfondo `#172a1f`, `FIT`, `CENTER_BOTH`, pixel art, Arcade senza gravità e le quattro scene in ordine. `BootScene.create()` avvia `preload`. `PreloadScene.preload()` carica `/maps/first-location.json`; `create()` genera con `Graphics.generateTexture` un eroe `24x28` e un edificio `160x128`, poi avvia `world` e lancia `ui` in parallelo.
 
@@ -685,7 +685,7 @@ html, body, #game { width: 100%; height: 100%; margin: 0; overflow: hidden; }
 canvas { image-rendering: pixelated; max-width: 100%; max-height: 100%; }
 ```
 
-- [ ] **Step 5: Verificare GREEN e committare**
+- [x] **Step 5: Verificare GREEN e committare**
 
 Run: `npm test -- tests/game/createGameConfig.test.ts`
 
@@ -710,7 +710,7 @@ git commit -m "feat: boot first Phaser world"
 - Consumes: tilemap `first-location`, `careerData`, `movementVector`, `nearestInteraction`, `resolveLocationRef`.
 - Produces: evento Phaser `location:show` con `Location`; pannello con titolo, ruolo/periodo, riepilogo, progetto e skill.
 
-- [ ] **Step 1: Scrivere il test fallente del view model**
+- [x] **Step 1: Scrivere il test fallente del view model**
 
 ```ts
 import { expect, it } from 'vitest'
@@ -728,7 +728,7 @@ it('formatta tutti i contenuti della sede', () => {
 })
 ```
 
-- [ ] **Step 2: Verificare RED, implementare e verificare GREEN**
+- [x] **Step 2: Verificare RED, implementare e verificare GREEN**
 
 Run: `npm test -- tests/ui/formatLocationPanel.test.ts`
 
@@ -752,17 +752,17 @@ Run: `npm test -- tests/ui/formatLocationPanel.test.ts`
 
 Expected: 1 test PASS.
 
-- [ ] **Step 3: Implementare `WorldScene` come adattatore Phaser**
+- [x] **Step 3: Implementare `WorldScene` come adattatore Phaser**
 
 In `create()`: creare la tilemap, disegnare prato/sentieri con `Graphics`, leggere spawn e sede dall'object layer, mostrare la texture edificio, creare il player Arcade, trasformare i rettangoli di `collisions` in body statici e seguire il player con la camera. Registrare frecce/WASD e Spazio/Invio.
 
 In `update()`: combinare input tastiera e `registry.get('touch-vector')`, applicare `movementVector(..., 160)` al body, calcolare la porta più vicina con `nearestInteraction(..., 72)`, emettere `interaction:prompt` quando è raggiungibile e `location:show` quando viene premuta l'azione. Al primo accesso chiamare `JournalState.discoverLocation`.
 
-- [ ] **Step 4: Implementare `UIScene`**
+- [x] **Step 4: Implementare `UIScene`**
 
 Creare un prompt basso `Spazio / Invio — scopri la sede`. Su `location:show`, usare `formatLocationPanel`, mostrare un pannello scuro con bordo chiaro e testo a capo; Esc e il pulsante `×` chiudono. Il pannello usa `setScrollFactor(0)` e profondità superiore al mondo.
 
-- [ ] **Step 5: Verificare test e committare**
+- [x] **Step 5: Verificare test e committare**
 
 Run: `npm test`
 
@@ -787,7 +787,7 @@ git commit -m "feat: make first career location interactive"
 - Consumes: pointer Phaser e registry condiviso.
 - Produces: registry `touch-vector: {x, y}` e `touch-action: boolean`.
 
-- [ ] **Step 1: Scrivere il test fallente della dead zone**
+- [x] **Step 1: Scrivere il test fallente della dead zone**
 
 ```ts
 import { expect, it } from 'vitest'
@@ -804,7 +804,7 @@ it('normalizza movimenti fuori dalla dead zone', () => {
 })
 ```
 
-- [ ] **Step 2: Verificare RED, implementare e verificare GREEN**
+- [x] **Step 2: Verificare RED, implementare e verificare GREEN**
 
 ```ts
 export function joystickDirection(x: number, y: number, deadZone: number) {
@@ -818,11 +818,11 @@ Run: `npm test -- tests/ui/joystickDirection.test.ts`
 
 Expected: 2 test PASS.
 
-- [ ] **Step 3: Implementare i controlli touch**
+- [x] **Step 3: Implementare i controlli touch**
 
 `TouchControls` crea una base circolare semitrasparente a sinistra e un pulsante `A` a destra, entrambi `setScrollFactor(0)`. Il trascinamento aggiorna `touch-vector` tramite `joystickDirection`; `pointerup` lo azzera. Il pulsante azione imposta `touch-action` solo sul fronte di pressione. I controlli sono visibili quando `navigator.maxTouchPoints > 0` o la viewport è larga meno di `760px`.
 
-- [ ] **Step 4: Verificare manualmente desktop e mobile**
+- [x] **Step 4: Verificare manualmente desktop e mobile**
 
 Run: `npm run dev -- --host 127.0.0.1`
 
@@ -834,7 +834,7 @@ Verificare nel browser:
 4. Mobile `390x844`: joystick e tasto `A` sono raggiungibili e non coprono il pannello.
 5. Rotazione `844x390`: canvas e controlli restano interamente visibili.
 
-- [ ] **Step 5: Committare**
+- [x] **Step 5: Committare**
 
 ```bash
 git add src/ui src/scenes/UIScene.ts tests/ui/joystickDirection.test.ts
@@ -853,27 +853,27 @@ git commit -m "feat: add responsive touch controls"
 - Consumes: tutti i deliverable precedenti.
 - Produces: istruzioni riproducibili e checklist completata.
 
-- [ ] **Step 1: Documentare avvio e contenuti**
+- [x] **Step 1: Documentare avvio e contenuti**
 
 Creare `README.md` con: requisiti Node/npm, `npm install`, `npm run dev`, `npm test`, `npm run build`, controlli desktop/mobile e indicazione che i contenuti si cambiano esclusivamente in `src/data/career.ts`.
 
-- [ ] **Step 2: Eseguire la suite completa**
+- [x] **Step 2: Eseguire la suite completa**
 
 Run: `npm test`
 
 Expected: tutti i test PASS, zero failure.
 
-- [ ] **Step 3: Eseguire typecheck e build**
+- [x] **Step 3: Eseguire typecheck e build**
 
 Run: `npm run build`
 
 Expected: TypeScript senza errori e build Vite completata in `dist/`.
 
-- [ ] **Step 4: Ripetere lo smoke test del percorso principale**
+- [x] **Step 4: Ripetere lo smoke test del percorso principale**
 
 Percorso: caricamento → movimento → porta sede → prompt → pannello → chiusura → riapertura. Verificare console browser senza errori.
 
-- [ ] **Step 5: Aggiornare le checkbox e committare**
+- [x] **Step 5: Aggiornare le checkbox e committare**
 
 ```bash
 git add README.md docs/superpowers/plans/2026-06-21-first-playable-location.md
