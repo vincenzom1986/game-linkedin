@@ -58,6 +58,7 @@ export class WorldScene extends Phaser.Scene {
   }
 
   create(): void {
+    this.promptVisible = false
     const map = this.make.tilemap({ key: 'career-city' })
     const entities = (map.getObjectLayer('entities')?.objects ?? []) as TiledObject[]
     const worldWidth = map.widthInPixels
@@ -228,20 +229,7 @@ export class WorldScene extends Phaser.Scene {
       this.player.setVelocity(0, 0)
       this.player.anims.stop()
       this.setIdleFrame()
-      if (this.promptVisible) {
-        this.promptVisible = false
-        if (this.promptTween) this.promptTween.stop()
-        this.promptTween = this.tweens.add({
-          targets: this.interactionPrompt,
-          scale: 0,
-          alpha: 0,
-          duration: 150,
-          ease: 'Back.easeIn',
-          onComplete: () => {
-            this.interactionPrompt.setVisible(false)
-          }
-        })
-      }
+      this.hidePrompt()
       return
     }
 
@@ -323,18 +311,7 @@ export class WorldScene extends Phaser.Scene {
         ease: 'Back.easeOut'
       })
     } else if (!shouldShow && this.promptVisible) {
-      this.promptVisible = false
-      if (this.promptTween) this.promptTween.stop()
-      this.promptTween = this.tweens.add({
-        targets: this.interactionPrompt,
-        scale: 0,
-        alpha: 0,
-        duration: 150,
-        ease: 'Back.easeIn',
-        onComplete: () => {
-          this.interactionPrompt.setVisible(false)
-        }
-      })
+      this.hidePrompt()
     }
 
     const keyboardAction = this.actionKeys.some((key) => Phaser.Input.Keyboard.JustDown(key))
@@ -350,6 +327,23 @@ export class WorldScene extends Phaser.Scene {
     this.journal.discoverLocation(target.location.id)
     this.game.events.emit('journal:update', this.journal.snapshot())
     this.game.events.emit('location:show', target.location)
+  }
+
+  private hidePrompt(): void {
+    if (this.promptVisible) {
+      this.promptVisible = false
+      if (this.promptTween) this.promptTween.stop()
+      this.promptTween = this.tweens.add({
+        targets: this.interactionPrompt,
+        scale: 0,
+        alpha: 0,
+        duration: 150,
+        ease: 'Back.easeIn',
+        onComplete: () => {
+          this.interactionPrompt.setVisible(false)
+        }
+      })
+    }
   }
 
   private setIdleFrame(): void {
@@ -425,7 +419,7 @@ export class WorldScene extends Phaser.Scene {
       fontStyle: 'bold'
     }).setOrigin(0.5)
 
-    this.interactionPrompt = this.add.container(0, 0, [bubble, text]).setDepth(30).setVisible(false).setScale(0)
+    this.interactionPrompt = this.add.container(0, 0, [bubble, text]).setDepth(30).setVisible(false).setScale(0).setAlpha(0)
 
     // Floating bounce animation loop - separate animations to maintain relative Y offset
     this.tweens.add({
