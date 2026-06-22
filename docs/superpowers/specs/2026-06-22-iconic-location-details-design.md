@@ -52,8 +52,9 @@ Gli elementi verranno gestiti come normali Phaser GameObjects in `WorldScene.ts`
 
 ---
 
-## Punti di Verifica
+## Punti di Verifica e Risultati
 
-- **Compilazione**: Il progetto deve compilare senza errori TypeScript.
-- **Raggiungibilità**: Il sentiero che conduce alle porte d'ingresso non deve essere bloccato da nessuno dei nuovi ostacoli.
-- **Test**: Tutti i test esistenti e nuovi devono superare con successo.
+- **Compilazione**: `npm run build` completato con successo senza errori TypeScript o Vite.
+- **Raggiungibilità**: Verificato che tutti i nuovi ostacoli fisici solidi si trovano nelle aree verdi/piazzali laterali, lasciando i sentieri principali e gli ingressi completamente liberi e accessibili per il giocatore.
+- **Test**: Tutti i 32 test automatici passano correttamente (`npm test`).
+
