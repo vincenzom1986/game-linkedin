@@ -13,7 +13,7 @@ export function formatLocationPanel(location: Location): LocationPanelViewModel 
     title: location.name,
     meta: [location.role, location.period].filter(Boolean).join(' · '),
     summary: location.summary,
-    projects: (location.projects ?? []).map(({ label, body }) => `${label} — ${body}`),
-    skills: (location.skills ?? []).map(({ name }) => name),
+    projects: location.activities,
+    skills: location.skills.map(({ name }) => name),
   }
 }

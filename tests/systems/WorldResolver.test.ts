@@ -3,8 +3,8 @@ import { careerData } from '../../src/data/career'
 import { resolveLocationRef } from '../../src/systems/WorldResolver'
 
 it('risolve il refId Tiled nella sede carriera', () => {
-  const object = { properties: [{ name: 'refId', value: 'demo-studio' }] }
-  expect(resolveLocationRef(object, careerData).name).toBe('Sede dimostrativa')
+  const object = { properties: [{ name: 'refId', value: 'the-big-now' }] }
+  expect(resolveLocationRef(object, careerData).name).toBe('The Big Now')
 })
 
 it('segnala un refId senza contenuto associato', () => {

@@ -47,7 +47,7 @@ describe('assertCareerData', () => {
   })
 
   it('rifiuta ordini cronologici duplicati', () => {
-    const second = structuredClone(validCareer.locations[0])
+    const second = structuredClone(validCareer.locations[0]!)
     second.id = 'second'
     second.logo.key = 'logo-second'
     expect(() => assertCareerData({ ...validCareer, locations: [validCareer.locations[0], second] }))
