@@ -160,6 +160,7 @@ export class UIScene extends Phaser.Scene {
   }
 
   private openPanel(): void {
+    this.tweens.killTweensOf(this.panel)
     this.registry.set('panel-open', true)
     this.prompt.setVisible(false)
 
@@ -251,7 +252,8 @@ export class UIScene extends Phaser.Scene {
     return false
   }
 
-  private onPointerDown(): void {
+  private onPointerDown(pointer: Phaser.Input.Pointer, gameObjects: Phaser.GameObjects.GameObject[]): void {
+    if (gameObjects && gameObjects.length > 0) return
     if (this.panel.visible) {
       this.skipTyping()
     }
@@ -281,6 +283,7 @@ export class UIScene extends Phaser.Scene {
   }
 
   private hidePanel(): void {
+    this.tweens.killTweensOf(this.panel)
     if (this.typingTimer) {
       this.typingTimer.destroy()
       this.typingTimer = undefined
