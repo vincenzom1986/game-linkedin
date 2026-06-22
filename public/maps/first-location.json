@@ -18,14 +18,14 @@
         },
         {
           "id": 2,
-          "name": "demo-studio",
+          "name": "the-big-now",
           "type": "location",
           "x": 512,
           "y": 192,
           "width": 160,
           "height": 128,
           "properties": [
-            { "name": "refId", "type": "string", "value": "demo-studio" }
+            { "name": "refId", "type": "string", "value": "the-big-now" }
           ]
         },
         {
@@ -36,7 +36,7 @@
           "x": 592,
           "y": 336,
           "properties": [
-            { "name": "refId", "type": "string", "value": "demo-studio" }
+            { "name": "refId", "type": "string", "value": "the-big-now" }
           ]
         }
       ],
