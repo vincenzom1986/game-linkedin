@@ -1,0 +1,374 @@
+{
+  "compressionlevel": -1,
+  "width": 1680,
+  "height": 941,
+  "infinite": false,
+  "layers": [
+    {
+      "id": 1,
+      "name": "entities",
+      "type": "objectgroup",
+      "objects": [
+        {
+          "id": 1,
+          "name": "spawn",
+          "type": "spawn",
+          "point": true,
+          "x": 118,
+          "y": 420,
+          "properties": []
+        },
+        {
+          "id": 2,
+          "name": "the-big-now",
+          "type": "location",
+          "x": 90,
+          "y": 48,
+          "width": 390,
+          "height": 340,
+          "properties": [
+            {
+              "name": "refId",
+              "type": "string",
+              "value": "the-big-now"
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "name": "the-big-now-door",
+          "type": "interaction",
+          "point": true,
+          "x": 286,
+          "y": 344,
+          "properties": [
+            {
+              "name": "refId",
+              "type": "string",
+              "value": "the-big-now"
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "name": "sg-holding",
+          "type": "location",
+          "x": 646,
+          "y": 34,
+          "width": 360,
+          "height": 340,
+          "properties": [
+            {
+              "name": "refId",
+              "type": "string",
+              "value": "sg-holding"
+            }
+          ]
+        },
+        {
+          "id": 5,
+          "name": "sg-holding-door",
+          "type": "interaction",
+          "point": true,
+          "x": 826,
+          "y": 334,
+          "properties": [
+            {
+              "name": "refId",
+              "type": "string",
+              "value": "sg-holding"
+            }
+          ]
+        },
+        {
+          "id": 6,
+          "name": "wunderman-thompson",
+          "type": "location",
+          "x": 1138,
+          "y": 42,
+          "width": 430,
+          "height": 350,
+          "properties": [
+            {
+              "name": "refId",
+              "type": "string",
+              "value": "wunderman-thompson"
+            }
+          ]
+        },
+        {
+          "id": 7,
+          "name": "wunderman-thompson-door",
+          "type": "interaction",
+          "point": true,
+          "x": 1352,
+          "y": 346,
+          "properties": [
+            {
+              "name": "refId",
+              "type": "string",
+              "value": "wunderman-thompson"
+            }
+          ]
+        },
+        {
+          "id": 8,
+          "name": "armando-testa",
+          "type": "location",
+          "x": 70,
+          "y": 486,
+          "width": 450,
+          "height": 330,
+          "properties": [
+            {
+              "name": "refId",
+              "type": "string",
+              "value": "armando-testa"
+            }
+          ]
+        },
+        {
+          "id": 9,
+          "name": "armando-testa-door",
+          "type": "interaction",
+          "point": true,
+          "x": 296,
+          "y": 760,
+          "properties": [
+            {
+              "name": "refId",
+              "type": "string",
+              "value": "armando-testa"
+            }
+          ]
+        },
+        {
+          "id": 10,
+          "name": "dentsu",
+          "type": "location",
+          "x": 610,
+          "y": 484,
+          "width": 430,
+          "height": 326,
+          "properties": [
+            {
+              "name": "refId",
+              "type": "string",
+              "value": "dentsu"
+            }
+          ]
+        },
+        {
+          "id": 11,
+          "name": "dentsu-door",
+          "type": "interaction",
+          "point": true,
+          "x": 826,
+          "y": 754,
+          "properties": [
+            {
+              "name": "refId",
+              "type": "string",
+              "value": "dentsu"
+            }
+          ]
+        },
+        {
+          "id": 12,
+          "name": "ey",
+          "type": "location",
+          "x": 1118,
+          "y": 454,
+          "width": 470,
+          "height": 390,
+          "properties": [
+            {
+              "name": "refId",
+              "type": "string",
+              "value": "ey"
+            }
+          ]
+        },
+        {
+          "id": 13,
+          "name": "ey-door",
+          "type": "interaction",
+          "point": true,
+          "x": 1352,
+          "y": 786,
+          "properties": [
+            {
+              "name": "refId",
+              "type": "string",
+              "value": "ey"
+            }
+          ]
+        },
+        {
+          "id": 14,
+          "name": "public-contact",
+          "type": "contact",
+          "point": true,
+          "x": 254,
+          "y": 868,
+          "properties": []
+        }
+      ],
+      "opacity": 1,
+      "visible": true,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "id": 2,
+      "name": "collisions",
+      "type": "objectgroup",
+      "objects": [
+        {
+          "id": 15,
+          "name": "north",
+          "type": "boundary",
+          "x": 0,
+          "y": 0,
+          "width": 1680,
+          "height": 24,
+          "properties": []
+        },
+        {
+          "id": 16,
+          "name": "south",
+          "type": "boundary",
+          "x": 0,
+          "y": 917,
+          "width": 1680,
+          "height": 24,
+          "properties": []
+        },
+        {
+          "id": 17,
+          "name": "west",
+          "type": "boundary",
+          "x": 0,
+          "y": 0,
+          "width": 24,
+          "height": 941,
+          "properties": []
+        },
+        {
+          "id": 18,
+          "name": "east",
+          "type": "boundary",
+          "x": 1656,
+          "y": 0,
+          "width": 24,
+          "height": 941,
+          "properties": []
+        },
+        {
+          "id": 19,
+          "name": "the-big-now-building",
+          "type": "building",
+          "x": 136,
+          "y": 68,
+          "width": 298,
+          "height": 248,
+          "properties": []
+        },
+        {
+          "id": 20,
+          "name": "sg-holding-building",
+          "type": "building",
+          "x": 692,
+          "y": 54,
+          "width": 268,
+          "height": 248,
+          "properties": []
+        },
+        {
+          "id": 21,
+          "name": "wunderman-thompson-building",
+          "type": "building",
+          "x": 1184,
+          "y": 62,
+          "width": 338,
+          "height": 258,
+          "properties": []
+        },
+        {
+          "id": 22,
+          "name": "armando-testa-building",
+          "type": "building",
+          "x": 116,
+          "y": 506,
+          "width": 358,
+          "height": 238,
+          "properties": []
+        },
+        {
+          "id": 23,
+          "name": "dentsu-building",
+          "type": "building",
+          "x": 656,
+          "y": 504,
+          "width": 338,
+          "height": 234,
+          "properties": []
+        },
+        {
+          "id": 24,
+          "name": "ey-building",
+          "type": "building",
+          "x": 1164,
+          "y": 474,
+          "width": 378,
+          "height": 298,
+          "properties": []
+        },
+        {
+          "id": 25,
+          "name": "top-water",
+          "type": "water",
+          "x": 1010,
+          "y": 22,
+          "width": 112,
+          "height": 260,
+          "properties": []
+        },
+        {
+          "id": 26,
+          "name": "left-canal",
+          "type": "water",
+          "x": 520,
+          "y": 274,
+          "width": 74,
+          "height": 430,
+          "properties": []
+        },
+        {
+          "id": 27,
+          "name": "bottom-water",
+          "type": "water",
+          "x": 0,
+          "y": 884,
+          "width": 1680,
+          "height": 57,
+          "properties": []
+        }
+      ],
+      "opacity": 1,
+      "visible": true,
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "nextlayerid": 3,
+  "nextobjectid": 28,
+  "orientation": "orthogonal",
+  "renderorder": "right-down",
+  "tiledversion": "1.10.2",
+  "tileheight": 1,
+  "tilewidth": 1,
+  "tilesets": [],
+  "type": "map",
+  "version": "1.10"
+}
