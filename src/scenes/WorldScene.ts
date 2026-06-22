@@ -108,6 +108,63 @@ export class WorldScene extends Phaser.Scene {
       this.renderLocationLogo(object, resolveLocationRef(object, careerData))
     }
 
+    // Create static physics group for all new solid location details
+    const obstacleGroup = this.physics.add.staticGroup()
+
+    // 1. SG Company - Aperitif Party
+    const party = this.physics.add.sprite(750, 330, 'sg-party').setDepth(12)
+    party.setDisplaySize(64, 48)
+    obstacleGroup.add(party)
+    party.refreshBody()
+    const partyBody = party.body as Phaser.Physics.Arcade.Body
+    partyBody.setSize(48, 16).setOffset(8, 32)
+    party.anims.play('party-idle')
+
+    // 2. Armando Testa - Punt e Mes & Blue Hippo
+    const pem = this.physics.add.image(210, 740, 'punt-e-mes').setDepth(12)
+    pem.setDisplaySize(32, 42)
+    obstacleGroup.add(pem)
+    pem.refreshBody()
+    const pemBody = pem.body as Phaser.Physics.Arcade.Body
+    pemBody.setSize(24, 16).setOffset(4, 26)
+
+    const hippo = this.physics.add.image(370, 740, 'blue-hippo').setDepth(12)
+    hippo.setDisplaySize(48, 48)
+    obstacleGroup.add(hippo)
+    hippo.refreshBody()
+    const hippoBody = hippo.body as Phaser.Physics.Arcade.Body
+    hippoBody.setSize(36, 20).setOffset(6, 28)
+    this.tweens.add({
+      targets: hippo,
+      angle: { from: -3, to: 3 },
+      duration: 1200,
+      yoyo: true,
+      repeat: -1,
+      ease: 'Sine.easeInOut'
+    })
+
+    // 3. Dentsu - Japanese Garden
+    const maple = this.physics.add.image(710, 740, 'japanese-maple').setDepth(15)
+    maple.setDisplaySize(64, 64)
+    obstacleGroup.add(maple)
+    maple.refreshBody()
+    const mapleBody = maple.body as Phaser.Physics.Arcade.Body
+    mapleBody.setSize(24, 16).setOffset(20, 48)
+
+    const pond = this.physics.add.image(750, 820, 'koi-pond').setDepth(11)
+    pond.setDisplaySize(64, 64)
+    obstacleGroup.add(pond)
+    pond.refreshBody()
+    const pondBody = pond.body as Phaser.Physics.Arcade.Body
+    pondBody.setSize(56, 40).setOffset(4, 12)
+
+    const lantern = this.physics.add.image(890, 745, 'stone-lantern').setDepth(12)
+    lantern.setDisplaySize(24, 36)
+    obstacleGroup.add(lantern)
+    lantern.refreshBody()
+    const lanternBody = lantern.body as Phaser.Physics.Arcade.Body
+    lanternBody.setSize(16, 12).setOffset(4, 24)
+
     const spawn = entities.find(({ type }) => type === 'spawn')
     if (!spawn?.x || !spawn.y) throw new Error('Tilemap is missing a spawn object')
 
@@ -120,6 +177,7 @@ export class WorldScene extends Phaser.Scene {
     body.setDrag(1200, 1200)
 
     this.createColliders(map)
+    this.physics.add.collider(this.player, obstacleGroup)
     this.physics.world.setBounds(0, 0, worldWidth, worldHeight)
     this.cameras.main.setBounds(0, 0, worldWidth, worldHeight)
     this.cameras.main.startFollow(this.player, true, 0.12, 0.12)
