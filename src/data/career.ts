@@ -93,7 +93,7 @@ export const careerData: CareerData = {
       kind: 'work',
       order: 4,
       building: 'communication-house',
-      logo: { key: 'logo-armando-testa', path: 'assets/logos/armando-testa.svg', alt: 'Armando Testa' },
+      logo: { key: 'logo-armando-testa', path: 'assets/logos/armando-testa.png', alt: 'Armando Testa' },
       period: '2021',
       role: 'Data Analyst Supervisor',
       summary: 'Text analytics e KPI per leggere reputazione, contenuti social e performance.',
