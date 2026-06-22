@@ -5,6 +5,7 @@ import { formatContactPanel, type ContactPanelViewModel } from '../ui/formatCont
 import { fitWithin } from '../ui/fitWithin'
 import { locationPanelPages, type LocationPanelPage } from '../ui/locationPanelPages'
 import { TouchControls } from '../ui/TouchControls'
+import { calculateCharTime, getDisplayedText } from '../ui/typewriter'
 
 export class UIScene extends Phaser.Scene {
   private prompt!: Phaser.GameObjects.Text
@@ -20,6 +21,11 @@ export class UIScene extends Phaser.Scene {
   private pages: LocationPanelPage[] = []
   private pageIndex = 0
   private contactView?: ContactPanelViewModel
+  private typingTimer?: Phaser.Time.TimerEvent
+  private currentFullText = ''
+  private currentTypedLength = 0
+  private cursorState = true
+  private cursorTimer?: Phaser.Time.TimerEvent
 
   constructor() {
     super('ui')
@@ -53,6 +59,7 @@ export class UIScene extends Phaser.Scene {
     this.input.keyboard?.on('keydown-RIGHT', this.nextPage, this)
     this.input.keyboard?.on('keydown-LEFT', this.previousPage, this)
     this.input.keyboard?.on('keydown-ENTER', this.nextPage, this)
+    this.input.on('pointerdown', this.onPointerDown, this)
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.removeListeners, this)
   }
 
@@ -118,7 +125,7 @@ export class UIScene extends Phaser.Scene {
   }
 
   private onPrompt(visible: boolean): void {
-    if (this.registry.get('panel-open') !== true) this.prompt.setVisible(visible)
+    // Replaced by floating prompt in WorldScene
   }
 
   private showLocation(location: Location): void {
@@ -155,8 +162,22 @@ export class UIScene extends Phaser.Scene {
   private openPanel(): void {
     this.registry.set('panel-open', true)
     this.prompt.setVisible(false)
+
+    // Reset panel status before animation
     this.panel.setVisible(true)
-    this.touchControls.setSuppressed(true)
+    this.panel.setAlpha(0)
+    this.panel.setPosition(36, 400) // Start below target y (276)
+
+    this.tweens.add({
+      targets: this.panel,
+      y: 276,
+      alpha: 1,
+      duration: 300,
+      ease: 'Cubic.easeOut',
+      onComplete: () => {
+        this.touchControls.setSuppressed(true)
+      }
+    })
   }
 
   private renderPage(): void {
@@ -164,12 +185,81 @@ export class UIScene extends Phaser.Scene {
     if (!page) return
     this.eyebrow.setText(page.eyebrow)
     this.title.setText(page.title)
-    this.body.setText(page.body)
     this.pageLabel.setText(String(this.pageIndex + 1) + ' / ' + String(this.pages.length))
+
+    // Stop existing timers
+    if (this.typingTimer) {
+      this.typingTimer.destroy()
+      this.typingTimer = undefined
+    }
+    if (this.cursorTimer) {
+      this.cursorTimer.destroy()
+      this.cursorTimer = undefined
+    }
+
+    this.currentFullText = page.body
+    this.currentTypedLength = 0
+    this.body.setText('')
+
+    if (this.currentFullText.length === 0) {
+      return
+    }
+
+    // Calculate dynamic character time to complete in ~150ms
+    const charTime = calculateCharTime(this.currentFullText.length, 150)
+
+    this.typingTimer = this.time.addEvent({
+      delay: charTime,
+      callback: () => {
+        this.currentTypedLength++
+        this.body.setText(getDisplayedText(this.currentFullText, this.currentTypedLength, this.cursorState))
+
+        if (this.currentTypedLength >= this.currentFullText.length) {
+          this.body.setText(this.currentFullText) // Complete text
+          this.typingTimer?.destroy()
+          this.typingTimer = undefined
+          this.cursorTimer?.destroy()
+          this.cursorTimer = undefined
+        }
+      },
+      repeat: this.currentFullText.length - 1
+    })
+
+    // Blinking cursor timer
+    this.cursorState = true
+    this.cursorTimer = this.time.addEvent({
+      delay: 80,
+      callback: () => {
+        this.cursorState = !this.cursorState
+        if (this.typingTimer) {
+          this.body.setText(getDisplayedText(this.currentFullText, this.currentTypedLength, this.cursorState))
+        }
+      },
+      loop: true
+    })
+  }
+
+  private skipTyping(): boolean {
+    if (this.typingTimer) {
+      this.typingTimer.destroy()
+      this.typingTimer = undefined
+      this.cursorTimer?.destroy()
+      this.cursorTimer = undefined
+      this.body.setText(this.currentFullText)
+      return true
+    }
+    return false
+  }
+
+  private onPointerDown(): void {
+    if (this.panel.visible) {
+      this.skipTyping()
+    }
   }
 
   private nextPage(): void {
     if (!this.panel.visible) return
+    if (this.skipTyping()) return // Skip typing first
     if (this.pageIndex < this.pages.length - 1) {
       this.pageIndex += 1
       this.renderPage()
@@ -178,6 +268,7 @@ export class UIScene extends Phaser.Scene {
 
   private previousPage(): void {
     if (!this.panel.visible) return
+    if (this.skipTyping()) return // Skip typing first
     if (this.pageIndex > 0) {
       this.pageIndex -= 1
       this.renderPage()
@@ -190,11 +281,29 @@ export class UIScene extends Phaser.Scene {
   }
 
   private hidePanel(): void {
-    this.registry.set('panel-open', false)
-    this.panel.setVisible(false)
-    this.contactActions.setVisible(false)
-    this.contactView = undefined
-    this.touchControls.setSuppressed(false)
+    if (this.typingTimer) {
+      this.typingTimer.destroy()
+      this.typingTimer = undefined
+    }
+    if (this.cursorTimer) {
+      this.cursorTimer.destroy()
+      this.cursorTimer = undefined
+    }
+
+    this.tweens.add({
+      targets: this.panel,
+      y: 400, // Slide down
+      alpha: 0,
+      duration: 200,
+      ease: 'Cubic.easeIn',
+      onComplete: () => {
+        this.panel.setVisible(false)
+        this.registry.set('panel-open', false)
+        this.contactActions.setVisible(false)
+        this.contactView = undefined
+        this.touchControls.setSuppressed(false)
+      }
+    })
   }
 
   private removeListeners(): void {
@@ -206,6 +315,7 @@ export class UIScene extends Phaser.Scene {
     this.input.keyboard?.off('keydown-RIGHT', this.nextPage, this)
     this.input.keyboard?.off('keydown-LEFT', this.previousPage, this)
     this.input.keyboard?.off('keydown-ENTER', this.nextPage, this)
+    this.input.off('pointerdown', this.onPointerDown, this)
     this.touchControls.destroy()
   }
 }
