@@ -31,6 +31,7 @@ export class PreloadScene extends Phaser.Scene {
   create(): void {
     this.createHeroSpritesheet()
     this.createAnimations()
+    this.createRuntimeTextures()
     this.scene.start('world')
   }
 
@@ -263,5 +264,59 @@ export class PreloadScene extends Phaser.Scene {
       frameRate: 8,
       repeat: -1,
     })
+  }
+
+  private createRuntimeTextures(): void {
+    // 1. Red Maple Leaf
+    let canvas = this.textures.createCanvas('leaf-red', 4, 4);
+    let ctx = canvas?.getContext();
+    if (ctx) {
+      ctx.fillStyle = '#8a1c14';
+      ctx.fillRect(1, 0, 2, 1);
+      ctx.fillRect(0, 1, 4, 2);
+      ctx.fillRect(1, 3, 2, 1);
+      canvas?.refresh();
+    }
+
+    // 2. Orange Maple Leaf
+    canvas = this.textures.createCanvas('leaf-orange', 4, 4);
+    ctx = canvas?.getContext();
+    if (ctx) {
+      ctx.fillStyle = '#c45d25';
+      ctx.fillRect(1, 0, 2, 1);
+      ctx.fillRect(0, 1, 4, 2);
+      ctx.fillRect(1, 3, 2, 1);
+      canvas?.refresh();
+    }
+
+    // 3. Bordeaux Maple Leaf
+    canvas = this.textures.createCanvas('leaf-bordeaux', 4, 4);
+    ctx = canvas?.getContext();
+    if (ctx) {
+      ctx.fillStyle = '#5e1015';
+      ctx.fillRect(1, 0, 2, 1);
+      ctx.fillRect(0, 1, 4, 2);
+      ctx.fillRect(1, 3, 2, 1);
+      canvas?.refresh();
+    }
+
+    // 4. Bubble
+    canvas = this.textures.createCanvas('bubble', 6, 6);
+    ctx = canvas?.getContext();
+    if (ctx) {
+      ctx.strokeStyle = '#9ee0ff';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(1, 1, 4, 4);
+      canvas?.refresh();
+    }
+
+    // 5. Firefly
+    canvas = this.textures.createCanvas('firefly', 2, 2);
+    ctx = canvas?.getContext();
+    if (ctx) {
+      ctx.fillStyle = '#ffe875';
+      ctx.fillRect(0, 0, 2, 2);
+      canvas?.refresh();
+    }
   }
 }
