@@ -34,7 +34,7 @@ const billboardCenters: Record<string, { x: number; y: number; maxW: number; max
   'sg-holding': { x: 776, y: 383, maxW: 50, maxH: 22 },
   'wunderman-thompson': { x: 1318, y: 381, maxW: 50, maxH: 22 },
   'armando-testa': { x: 259, y: 792, maxW: 50, maxH: 22 },
-  'dentsu': { x: 772, y: 794, maxW: 50, maxH: 22 },
+  'dentsu': { x: 772, y: 592, maxW: 64, maxH: 32 },
   'ey': { x: 1335, y: 800, maxW: 50, maxH: 22 },
 }
 
@@ -62,6 +62,16 @@ export class WorldScene extends Phaser.Scene {
 
     // Add city background image
     this.add.image(0, 0, 'career-city-background').setOrigin(0).setDepth(0)
+
+    // Cover the pre-painted Dentsu bottom sign post with a pavement-colored patch
+    const dentsuPatch = this.add.graphics().setDepth(1)
+    dentsuPatch.fillStyle(0x877f73, 1)
+    dentsuPatch.fillRect(741, 776, 62, 42)
+
+    // Cover the pre-painted Armando Testa bottom sign text with a cream-colored patch
+    const atPatch = this.add.graphics().setDepth(1)
+    atPatch.fillStyle(0xd5bc9a, 1)
+    atPatch.fillRect(231, 778, 56, 28)
 
     // Render company logo overlays
     for (const object of entities.filter(({ type }) => type === 'location')) {

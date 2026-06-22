@@ -10,7 +10,11 @@ export class PreloadScene extends Phaser.Scene {
     this.load.tilemapTiledJSON('career-city', 'maps/career-city.json')
     this.load.image('career-city-background', 'assets/world/career-city.png')
     for (const location of careerData.locations) {
-      this.load.image(location.logo.key, location.logo.path)
+      if (location.logo.path.endsWith('.svg')) {
+        this.load.svg(location.logo.key, location.logo.path)
+      } else {
+        this.load.image(location.logo.key, location.logo.path)
+      }
     }
   }
 
