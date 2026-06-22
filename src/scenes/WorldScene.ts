@@ -49,6 +49,9 @@ export class WorldScene extends Phaser.Scene {
   private interactions: WorldInteraction[] = []
   private readonly journal = new JournalState(careerData.locations.length)
   private facingDirection = 'down'
+  private interactionPrompt!: Phaser.GameObjects.Container
+  private promptVisible = false
+  private promptTween?: Phaser.Tweens.Tween
 
   constructor() {
     super('world')
@@ -212,6 +215,7 @@ export class WorldScene extends Phaser.Scene {
       const worldPoint = this.cameras.main.getWorldPoint(pointer.x, pointer.y)
       console.log(`Clicked X: ${Math.round(worldPoint.x)}, Y: ${Math.round(worldPoint.y)}`)
     })
+    this.createInteractionPrompt()
     this.scene.launch('ui')
     this.game.events.emit('journal:update', this.journal.snapshot())
   }
@@ -224,6 +228,20 @@ export class WorldScene extends Phaser.Scene {
       this.player.setVelocity(0, 0)
       this.player.anims.stop()
       this.setIdleFrame()
+      if (this.promptVisible) {
+        this.promptVisible = false
+        if (this.promptTween) this.promptTween.stop()
+        this.promptTween = this.tweens.add({
+          targets: this.interactionPrompt,
+          scale: 0,
+          alpha: 0,
+          duration: 150,
+          ease: 'Back.easeIn',
+          onComplete: () => {
+            this.interactionPrompt.setVisible(false)
+          }
+        })
+      }
       return
     }
 
@@ -288,6 +306,37 @@ export class WorldScene extends Phaser.Scene {
     )
     this.game.events.emit('interaction:prompt', Boolean(target))
 
+    const shouldShow = Boolean(target) && (this.registry.get('panel-open') !== true)
+
+    this.interactionPrompt.x = this.player.x
+    this.interactionPrompt.y = this.player.y - 32
+
+    if (shouldShow && !this.promptVisible) {
+      this.promptVisible = true
+      this.interactionPrompt.setVisible(true)
+      if (this.promptTween) this.promptTween.stop()
+      this.promptTween = this.tweens.add({
+        targets: this.interactionPrompt,
+        scale: 1,
+        alpha: 1,
+        duration: 150,
+        ease: 'Back.easeOut'
+      })
+    } else if (!shouldShow && this.promptVisible) {
+      this.promptVisible = false
+      if (this.promptTween) this.promptTween.stop()
+      this.promptTween = this.tweens.add({
+        targets: this.interactionPrompt,
+        scale: 0,
+        alpha: 0,
+        duration: 150,
+        ease: 'Back.easeIn',
+        onComplete: () => {
+          this.interactionPrompt.setVisible(false)
+        }
+      })
+    }
+
     const keyboardAction = this.actionKeys.some((key) => Phaser.Input.Keyboard.JustDown(key))
     const touchAction = this.registry.get('touch-action') === true
     if (touchAction) this.registry.set('touch-action', false)
@@ -344,6 +393,56 @@ export class WorldScene extends Phaser.Scene {
       rectangle.setVisible(false)
       this.physics.add.existing(rectangle, true)
       this.physics.add.collider(this.player, rectangle)
+    })
+  }
+
+  private createInteractionPrompt(): void {
+    const bubble = this.add.graphics()
+    // Draw speech bubble
+    bubble.fillStyle(0xfff4cc, 0.95)
+    bubble.fillRoundedRect(-40, -18, 80, 26, 4)
+    bubble.lineStyle(2, 0x172a1f, 1)
+    bubble.strokeRoundedRect(-40, -18, 80, 26, 4)
+
+    // Draw little arrow pointer at bottom
+    bubble.fillStyle(0xfff4cc, 0.95)
+    bubble.fillTriangle(-6, 8, 6, 8, 0, 14)
+    bubble.lineStyle(2, 0x172a1f, 1)
+    // Draw dark border lines for the triangle
+    bubble.beginPath()
+    bubble.moveTo(-6, 8)
+    bubble.lineTo(0, 14)
+    bubble.lineTo(6, 8)
+    bubble.strokePath()
+    // Overwrite the border connection
+    bubble.fillStyle(0xfff4cc, 1)
+    bubble.fillTriangle(-5, 7, 5, 7, 0, 12)
+
+    const text = this.add.text(0, -5, '[SPAZIO]', {
+      fontFamily: 'monospace',
+      fontSize: '11px',
+      color: '#172a1f',
+      fontStyle: 'bold'
+    }).setOrigin(0.5)
+
+    this.interactionPrompt = this.add.container(0, 0, [bubble, text]).setDepth(30).setVisible(false).setScale(0)
+
+    // Floating bounce animation loop - separate animations to maintain relative Y offset
+    this.tweens.add({
+      targets: bubble,
+      y: { from: 0, to: -5 },
+      duration: 800,
+      yoyo: true,
+      repeat: -1,
+      ease: 'Sine.easeInOut'
+    })
+    this.tweens.add({
+      targets: text,
+      y: { from: -5, to: -10 },
+      duration: 800,
+      yoyo: true,
+      repeat: -1,
+      ease: 'Sine.easeInOut'
     })
   }
 }
