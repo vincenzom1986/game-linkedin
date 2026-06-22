@@ -59,6 +59,7 @@ export class UIScene extends Phaser.Scene {
     this.input.keyboard?.on('keydown-RIGHT', this.nextPage, this)
     this.input.keyboard?.on('keydown-LEFT', this.previousPage, this)
     this.input.keyboard?.on('keydown-ENTER', this.nextPage, this)
+    this.input.keyboard?.on('keydown-SPACE', this.nextPage, this)
     this.input.on('pointerdown', this.onPointerDown, this)
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, this.removeListeners, this)
   }
@@ -163,6 +164,7 @@ export class UIScene extends Phaser.Scene {
     this.tweens.killTweensOf(this.panel)
     this.registry.set('panel-open', true)
     this.prompt.setVisible(false)
+    this.touchControls.setSuppressed(true)
 
     // Reset panel status before animation
     this.panel.setVisible(true)
@@ -174,10 +176,7 @@ export class UIScene extends Phaser.Scene {
       y: 276,
       alpha: 1,
       duration: 300,
-      ease: 'Cubic.easeOut',
-      onComplete: () => {
-        this.touchControls.setSuppressed(true)
-      }
+      ease: 'Cubic.easeOut'
     })
   }
 
@@ -318,6 +317,7 @@ export class UIScene extends Phaser.Scene {
     this.input.keyboard?.off('keydown-RIGHT', this.nextPage, this)
     this.input.keyboard?.off('keydown-LEFT', this.previousPage, this)
     this.input.keyboard?.off('keydown-ENTER', this.nextPage, this)
+    this.input.keyboard?.off('keydown-SPACE', this.nextPage, this)
     this.input.off('pointerdown', this.onPointerDown, this)
     this.touchControls.destroy()
   }

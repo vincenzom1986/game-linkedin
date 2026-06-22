@@ -267,6 +267,7 @@ export class PreloadScene extends Phaser.Scene {
   }
 
   private createRuntimeTextures(): void {
+    if (this.textures.exists('leaf-red')) return;
     // 1. Red Maple Leaf
     let canvas = this.textures.createCanvas('leaf-red', 4, 4);
     let ctx = canvas?.getContext();
