@@ -27,12 +27,13 @@ export class PreloadScene extends Phaser.Scene {
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    // Colors for the pixel art character
-    const skin = '#f2d07a'
-    const shirt = '#315c45'
-    const pants = '#19352a'
-    const hair = '#45281e'
-    const eyes = '#1c1c1c'
+    // Colors customized to match user's photo
+    const skin = '#f7d0b5'
+    const jacket = '#d99a26' // Mustard yellow jacket
+    const pants = '#2d5380'  // Blue jeans
+    const hair = '#111111'   // Dark hair
+    const beard = '#111111'  // Dark beard
+    const glasses = '#0d0d0d' // Sunglasses
 
     // Helper to draw a single frame (24x28 pixels)
     // step: 0 = standing, 1 = walk left leg, 2 = walk right leg
@@ -43,17 +44,37 @@ export class PreloadScene extends Phaser.Scene {
         // Hair
         ctx.fillStyle = hair
         ctx.fillRect(fx + 6, fy + 0, 12, 3)
+        // Curly hair details at top sides
+        ctx.fillRect(fx + 5, fy + 1, 1, 2)
+        ctx.fillRect(fx + 18, fy + 1, 1, 2)
+        
         // Head
         ctx.fillStyle = skin
         ctx.fillRect(fx + 6, fy + 3, 12, 7)
-        // Eyes
-        ctx.fillStyle = eyes
-        ctx.fillRect(fx + 8, fy + 6, 2, 2)
-        ctx.fillRect(fx + 14, fy + 6, 2, 2)
-        // Torso (Shirt)
-        ctx.fillStyle = shirt
+        
+        // Sunglasses
+        ctx.fillStyle = glasses
+        ctx.fillRect(fx + 7, fy + 5, 10, 2)
+        
+        // Beard / Mustache
+        ctx.fillStyle = beard
+        ctx.fillRect(fx + 7, fy + 7, 10, 1)
+        ctx.fillRect(fx + 6, fy + 8, 12, 2)
+        
+        // Torso (Mustard Jacket)
+        ctx.fillStyle = jacket
         ctx.fillRect(fx + 4, fy + 10, 16, 12)
-        // Legs / Feet
+        
+        // Zipper detail
+        ctx.fillStyle = '#b58322'
+        ctx.fillRect(fx + 11, fy + 10, 2, 12)
+        
+        // Backpack straps (dark camo/black)
+        ctx.fillStyle = '#2d3b2d'
+        ctx.fillRect(fx + 6, fy + 10, 2, 8)
+        ctx.fillRect(fx + 16, fy + 10, 2, 8)
+        
+        // Legs / Feet (Blue Jeans)
         ctx.fillStyle = pants
         if (step === 0) {
           ctx.fillRect(fx + 6, fy + 22, 4, 6)
@@ -69,10 +90,23 @@ export class PreloadScene extends Phaser.Scene {
         // Hair (covers back of head)
         ctx.fillStyle = hair
         ctx.fillRect(fx + 6, fy + 0, 12, 9)
-        // Torso
-        ctx.fillStyle = shirt
+        // Curly hair details on sides
+        ctx.fillRect(fx + 5, fy + 2, 1, 6)
+        ctx.fillRect(fx + 18, fy + 2, 1, 6)
+        
+        // Torso (Jacket with hood)
+        ctx.fillStyle = jacket
         ctx.fillRect(fx + 4, fy + 10, 16, 12)
-        // Legs / Feet
+        ctx.fillStyle = '#b58322' // Hood outline
+        ctx.fillRect(fx + 6, fy + 10, 12, 2)
+        
+        // Backpack (dark camo green) on back
+        ctx.fillStyle = '#3a4e3a'
+        ctx.fillRect(fx + 6, fy + 12, 12, 10)
+        ctx.fillStyle = '#243324' // Backpack pocket details
+        ctx.fillRect(fx + 8, fy + 14, 8, 6)
+        
+        // Legs / Feet (Blue Jeans)
         ctx.fillStyle = pants
         if (step === 0) {
           ctx.fillRect(fx + 6, fy + 22, 4, 6)
@@ -89,12 +123,33 @@ export class PreloadScene extends Phaser.Scene {
         ctx.fillStyle = hair
         ctx.fillRect(fx + 7, fy + 0, 9, 3)
         ctx.fillRect(fx + 6, fy + 3, 5, 6)
+        ctx.fillRect(fx + 6, fy + 1, 1, 2) // curly detail
+        
         // Head
         ctx.fillStyle = skin
         ctx.fillRect(fx + 8, fy + 3, 9, 7)
-        // Torso
-        ctx.fillStyle = shirt
+        
+        // Sunglasses on side
+        ctx.fillStyle = glasses
+        ctx.fillRect(fx + 7, fy + 5, 5, 2)
+        
+        // Beard / Mustache
+        ctx.fillStyle = beard
+        ctx.fillRect(fx + 8, fy + 7, 4, 1)
+        ctx.fillRect(fx + 7, fy + 8, 8, 2)
+        
+        // Torso (Jacket)
+        ctx.fillStyle = jacket
         ctx.fillRect(fx + 6, fy + 10, 12, 12)
+        
+        // Backpack on left side (drawn on the back / right)
+        ctx.fillStyle = '#3a4e3a'
+        ctx.fillRect(fx + 14, fy + 12, 3, 10)
+        
+        // Backpack strap on the left (front)
+        ctx.fillStyle = '#2d3b2d'
+        ctx.fillRect(fx + 8, fy + 10, 2, 8)
+        
         // Legs
         ctx.fillStyle = pants
         if (step === 0) {
@@ -112,12 +167,33 @@ export class PreloadScene extends Phaser.Scene {
         ctx.fillStyle = hair
         ctx.fillRect(fx + 8, fy + 0, 9, 3)
         ctx.fillRect(fx + 13, fy + 3, 5, 6)
+        ctx.fillRect(fx + 17, fy + 1, 1, 2) // curly detail
+        
         // Head
         ctx.fillStyle = skin
         ctx.fillRect(fx + 7, fy + 3, 9, 7)
-        // Torso
-        ctx.fillStyle = shirt
+        
+        // Sunglasses on side
+        ctx.fillStyle = glasses
+        ctx.fillRect(fx + 12, fy + 5, 5, 2)
+        
+        // Beard / Mustache
+        ctx.fillStyle = beard
+        ctx.fillRect(fx + 12, fy + 7, 4, 1)
+        ctx.fillRect(fx + 9, fy + 8, 8, 2)
+        
+        // Torso (Jacket)
+        ctx.fillStyle = jacket
         ctx.fillRect(fx + 6, fy + 10, 12, 12)
+        
+        // Backpack on right side (drawn on the back / left)
+        ctx.fillStyle = '#3a4e3a'
+        ctx.fillRect(fx + 7, fy + 12, 3, 10)
+        
+        // Backpack strap on the right (front)
+        ctx.fillStyle = '#2d3b2d'
+        ctx.fillRect(fx + 14, fy + 10, 2, 8)
+        
         // Legs
         ctx.fillStyle = pants
         if (step === 0) {

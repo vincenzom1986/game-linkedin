@@ -29,6 +29,15 @@ type WorldInteraction =
   | { id: string; x: number; y: number; kind: 'location'; location: Location }
   | { id: string; x: number; y: number; kind: 'contact' }
 
+const billboardCenters: Record<string, { x: number; y: number; maxW: number; maxH: number }> = {
+  'the-big-now': { x: 306, y: 381, maxW: 50, maxH: 22 },
+  'sg-holding': { x: 776, y: 383, maxW: 50, maxH: 22 },
+  'wunderman-thompson': { x: 1318, y: 381, maxW: 50, maxH: 22 },
+  'armando-testa': { x: 259, y: 792, maxW: 50, maxH: 22 },
+  'dentsu': { x: 772, y: 794, maxW: 50, maxH: 22 },
+  'ey': { x: 1335, y: 800, maxW: 50, maxH: 22 },
+}
+
 const PLAYER_SPEED = 160
 const INTERACTION_DISTANCE = 72
 
@@ -101,6 +110,10 @@ export class WorldScene extends Phaser.Scene {
     this.registry.set('panel-open', false)
     this.registry.set('touch-vector', { x: 0, y: 0 })
     this.registry.set('touch-action', false)
+    this.input.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
+      const worldPoint = this.cameras.main.getWorldPoint(pointer.x, pointer.y)
+      console.log(`Clicked X: ${Math.round(worldPoint.x)}, Y: ${Math.round(worldPoint.y)}`)
+    })
     this.scene.launch('ui')
     this.game.events.emit('journal:update', this.journal.snapshot())
   }
@@ -200,44 +213,16 @@ export class WorldScene extends Phaser.Scene {
   }
 
   private renderLocationLogo(object: TiledObject, location: Location): void {
-    const x = (object.x ?? 0) + (object.width ?? 0) / 2
-    const y = (object.y ?? 0) + 52
+    const coord = billboardCenters[location.id]
+    if (!coord) return
 
-    const palette = location.district.palette
-    const borderColor = Phaser.Display.Color.HexStringToColor(palette[0]).color
-    const accentColor = Phaser.Display.Color.HexStringToColor(palette[1]).color
-    const bgColor = 0xfffbf0 // Warm cream/white background for logo visibility
+    const { x, y, maxW, maxH } = coord
 
-    const graphics = this.add.graphics().setDepth(8)
-
-    // 1. Draw shadow for the sign board
-    graphics.fillStyle(0x000000, 0.25)
-    graphics.fillRect(x - 62 + 3, y - 26 + 3, 124, 52)
-    graphics.fillRect(x - 30 + 3, y + 26 + 3, 6, 20)
-    graphics.fillRect(x + 24 + 3, y + 26 + 3, 6, 20)
-
-    // 2. Draw support poles (poles/legs of the billboard)
-    graphics.fillStyle(0x2d1b10)
-    graphics.fillRect(x - 30, y + 26, 6, 20)
-    graphics.fillRect(x + 24, y + 26, 6, 20)
-
-    // 3. Draw outer border (primary theme color)
-    graphics.fillStyle(borderColor)
-    graphics.fillRect(x - 62, y - 26, 124, 52)
-
-    // 4. Draw inner accent border (secondary theme color)
-    graphics.fillStyle(accentColor)
-    graphics.fillRect(x - 60, y - 24, 120, 48)
-
-    // 5. Draw inner board background (warm white/cream)
-    graphics.fillStyle(bgColor)
-    graphics.fillRect(x - 58, y - 22, 116, 44)
-
-    // 6. Render logo on top
+    // Render logo on top
     if (!this.textures.exists(location.logo.key)) {
       this.add.text(x, y, location.name.toUpperCase(), {
         fontFamily: 'monospace',
-        fontSize: '11px',
+        fontSize: '8px',
         color: '#172036',
         fontStyle: 'bold',
       }).setOrigin(0.5).setDepth(10)
@@ -245,7 +230,7 @@ export class WorldScene extends Phaser.Scene {
     }
 
     const logo = this.add.image(x, y, location.logo.key).setDepth(10)
-    const size = fitWithin(logo.width, logo.height, 108, 36)
+    const size = fitWithin(logo.width, logo.height, maxW, maxH)
     logo.setDisplaySize(size.width, size.height)
   }
 
