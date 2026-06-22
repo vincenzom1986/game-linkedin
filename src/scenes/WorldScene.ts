@@ -63,6 +63,22 @@ export class WorldScene extends Phaser.Scene {
     // Add city background image
     this.add.image(0, 0, 'career-city-background').setOrigin(0).setDepth(0)
 
+    // Overlay the EY skyscraper
+    const eySkyscraper = this.add.image(1164, 474, 'ey-skyscraper').setOrigin(0).setDepth(5)
+    eySkyscraper.setDisplaySize(378, 298)
+
+    // Add and animate Flying Cow
+    const cow = this.add.image(286, 130, 'flying-cow').setDepth(25)
+    cow.setDisplaySize(64, 64)
+    this.tweens.add({
+      targets: cow,
+      y: 130 - 8,
+      duration: 1500,
+      yoyo: true,
+      repeat: -1,
+      ease: 'Sine.easeInOut'
+    })
+
     // Cover the Dentsu building billboard to remove it completely
     const dentsuBuildingPatch = this.add.graphics().setDepth(1)
     const PATCH_COLORS = [
