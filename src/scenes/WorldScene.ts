@@ -169,6 +169,73 @@ export class WorldScene extends Phaser.Scene {
     const lanternBody = lantern.body as Phaser.Physics.Arcade.Body
     lanternBody.setSize(16, 12).setOffset(4, 24)
 
+    // Maple leaves emitter
+    const leafColors = ['leaf-red', 'leaf-orange', 'leaf-bordeaux']
+    leafColors.forEach((color) => {
+      const emitter = this.add.particles(0, 0, color, {
+        x: { min: 660, max: 740 },
+        y: { min: 680, max: 710 },
+        speedY: { min: 30, max: 60 },
+        speedX: { min: -40, max: -10 }, // Blowing left
+        scale: { start: 0.8, end: 1.2 },
+        alpha: { start: 1, end: 0 },
+        lifespan: { min: 3000, max: 5000 },
+        frequency: 1200,
+        rotate: { min: 0, max: 360 }
+      })
+      emitter.setDepth(16) // Above tree trunk but behind foliage tops
+    })
+
+    // Bubbles rising in the pond
+    const bubbleEmitter = this.add.particles(0, 0, 'bubble', {
+      x: { min: 725, max: 775 },
+      y: { min: 805, max: 835 },
+      speedY: { min: -10, max: -20 },
+      speedX: { min: -5, max: 5 },
+      scale: { start: 0.5, end: 1 },
+      alpha: { start: 0.6, end: 0 },
+      lifespan: { min: 1000, max: 2000 },
+      frequency: 600
+    })
+    bubbleEmitter.setDepth(11) // Inside the pond, below player depth
+
+    // periodic ripples
+    this.time.addEvent({
+      delay: 3500,
+      callback: () => {
+        const rx = Phaser.Math.Between(730, 770)
+        const ry = Phaser.Math.Between(810, 830)
+        const ripple = this.add.graphics().setDepth(11)
+        ripple.lineStyle(1.5, 0x9ee0ff, 0.6)
+        ripple.strokeCircle(rx, ry, 2)
+        this.tweens.add({
+          targets: ripple,
+          scaleX: 6,
+          scaleY: 6,
+          alpha: 0,
+          duration: 1800,
+          onComplete: () => {
+            ripple.destroy()
+          }
+        })
+      },
+      loop: true
+    })
+
+    // Sparse Global Fireflies
+    const fireflyEmitter = this.add.particles(0, 0, 'firefly', {
+      x: { min: 0, max: 1600 }, // Full map width
+      y: { min: 0, max: 1200 }, // Full map height
+      speedY: { min: -10, max: 10 },
+      speedX: { min: -15, max: 15 },
+      scale: { start: 0.5, end: 1 },
+      alpha: { start: 0, end: 0.8 },
+      lifespan: { min: 4000, max: 8000 },
+      frequency: 400,
+      maxParticles: 35 // Sparse atmosphere
+    })
+    fireflyEmitter.setDepth(28) // Above buildings, below clouds/floating cow
+
     const spawn = entities.find(({ type }) => type === 'spawn')
     if (!spawn?.x || !spawn.y) throw new Error('Tilemap is missing a spawn object')
 
