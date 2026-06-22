@@ -16,6 +16,16 @@ export class PreloadScene extends Phaser.Scene {
         this.load.image(location.logo.key, location.logo.path)
       }
     }
+
+    // Load iconic location details and overrides
+    this.load.image('flying-cow', 'assets/logos/flying-cow.png')
+    this.load.spritesheet('sg-party', 'assets/logos/sg-party.png', { frameWidth: 1024, frameHeight: 341 })
+    this.load.image('punt-e-mes', 'assets/logos/punt-e-mes.png')
+    this.load.image('blue-hippo', 'assets/logos/blue-hippo.png')
+    this.load.image('japanese-maple', 'assets/logos/japanese-maple.png')
+    this.load.image('stone-lantern', 'assets/logos/stone-lantern.png')
+    this.load.image('koi-pond', 'assets/logos/koi-pond.png')
+    this.load.image('ey-skyscraper', 'assets/logos/ey-skyscraper.png')
   }
 
   create(): void {
