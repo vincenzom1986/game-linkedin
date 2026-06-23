@@ -48,6 +48,21 @@ const rules = {
   },
   'wunderman-thompson-building.png': (r, g, b) => {
     return r > 240 && g > 240 && b > 240;
+  },
+  'cherry-tree.png': (r, g, b) => {
+    return r <= 10 && g <= 10 && b <= 10;
+  },
+  'windmill-body.png': (r, g, b) => {
+    return r <= 10 && g <= 10 && b <= 10;
+  },
+  'windmill-blades.png': (r, g, b) => {
+    return r <= 10 && g <= 10 && b <= 10;
+  },
+  'punt-e-mes-building.png': (r, g, b) => {
+    return r <= 10 && g <= 10 && b <= 10;
+  },
+  'event-stage.png': (r, g, b) => {
+    return r <= 10 && g <= 10 && b <= 10;
   }
 };
 
@@ -64,7 +79,12 @@ const targets = {
   'sg-holding.png': { maxW: 50, maxH: 22 },
   'wunderman-thompson.png': { maxW: 50, maxH: 22 },
   'dentsu-building.png': { maxW: 338, maxH: 234 },
-  'wunderman-thompson-building.png': { maxW: 338, maxH: 258 }
+  'wunderman-thompson-building.png': { maxW: 338, maxH: 258 },
+  'cherry-tree.png': { maxW: 64, maxH: 64 },
+  'windmill-body.png': { maxW: 120, maxH: 150 },
+  'windmill-blades.png': { maxW: 100, maxH: 100 },
+  'punt-e-mes-building.png': { maxW: 150, maxH: 200 },
+  'event-stage.png': { maxW: 180, maxH: 120 }
 };
 
 // Flood-fill BFS to clean background connected to the borders
@@ -313,7 +333,7 @@ async function processFile(file) {
     let resized = resizeNearest(srcPng, dstW, dstH);
 
     // Apply outline for actual game assets, but NOT for building facades (like ey-skyscraper, dentsu-building, wunderman-thompson-building) or billboard logos
-    if (file !== 'ey-skyscraper.png' && file !== 'dentsu-building.png' && file !== 'wunderman-thompson-building.png' && !['the-big-now.png', 'armando-testa.png', 'sg-holding.png', 'wunderman-thompson.png'].includes(file)) {
+    if (file !== 'ey-skyscraper.png' && file !== 'dentsu-building.png' && file !== 'wunderman-thompson-building.png' && file !== 'windmill-body.png' && file !== 'punt-e-mes-building.png' && file !== 'event-stage.png' && !['the-big-now.png', 'armando-testa.png', 'sg-holding.png', 'wunderman-thompson.png'].includes(file)) {
       addOutline(resized);
       console.log(`  Added retro pixel outline.`);
     }
