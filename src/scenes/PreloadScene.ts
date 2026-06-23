@@ -27,7 +27,11 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image('koi-pond', 'assets/logos/koi-pond.png')
     this.load.image('ey-skyscraper', 'assets/logos/ey-skyscraper.png')
     this.load.image('dentsu-building', 'assets/logos/dentsu-building.png')
-    this.load.image('wunderman-thompson-building', 'assets/logos/wunderman-thompson-building.png')
+    this.load.image('cherry-tree', 'assets/logos/cherry-tree.png')
+    this.load.image('windmill-body', 'assets/logos/windmill-body.png')
+    this.load.image('windmill-blades', 'assets/logos/windmill-blades.png')
+    this.load.image('punt-e-mes-building', 'assets/logos/punt-e-mes-building.png')
+    this.load.image('event-stage', 'assets/logos/event-stage.png')
   }
 
   create(): void {
@@ -299,6 +303,30 @@ export class PreloadScene extends Phaser.Scene {
       repeat: -1,
       yoyo: true
     })
+
+    this.anims.create({
+      key: 'diana-talk',
+      frames: this.anims.generateFrameNumbers('party-guests', { start: 6, end: 7 }),
+      frameRate: 3,
+      repeat: -1,
+      yoyo: true
+    })
+
+    this.anims.create({
+      key: 'enzo-talk',
+      frames: this.anims.generateFrameNumbers('party-guests', { start: 8, end: 9 }),
+      frameRate: 4,
+      repeat: -1,
+      yoyo: true
+    })
+
+    this.anims.create({
+      key: 'francesca-talk',
+      frames: this.anims.generateFrameNumbers('party-guests', { start: 10, end: 11 }),
+      frameRate: 3,
+      repeat: -1,
+      yoyo: true
+    })
   }
 
   private createRuntimeTextures(): void {
@@ -358,7 +386,7 @@ export class PreloadScene extends Phaser.Scene {
 
   private createPartyGuestsSpritesheet(): void {
     const canvas = document.createElement('canvas')
-    canvas.width = 144
+    canvas.width = 288
     canvas.height = 28
     const ctx = canvas.getContext('2d')
     if (!ctx) return
@@ -374,6 +402,18 @@ export class PreloadScene extends Phaser.Scene {
     // Guest 3 (Carlo) - Frame 0 & 1
     this.drawGuest(ctx, 96, 0, '#e5b290', '#2d3b2d', '#5a5c5a', '#222222', false)
     this.drawGuest(ctx, 120, 0, '#e5b290', '#2d3b2d', '#5a5c5a', '#222222', true)
+
+    // Guest 4 (Diana) - Frame 0 & 1
+    this.drawGuest(ctx, 144, 0, '#f9c3a6', '#6b356b', '#2d3b2d', '#8a1c14', false)
+    this.drawGuest(ctx, 168, 0, '#f9c3a6', '#6b356b', '#2d3b2d', '#8a1c14', true)
+
+    // Guest 5 (Enzo) - Frame 0 & 1
+    this.drawGuest(ctx, 192, 0, '#ecd0b3', '#d98b51', '#222222', '#68573e', false)
+    this.drawGuest(ctx, 216, 0, '#ecd0b3', '#d98b51', '#222222', '#68573e', true)
+
+    // Guest 6 (Francesca) - Frame 0 & 1
+    this.drawGuest(ctx, 240, 0, '#f7d0b5', '#2d5380', '#8a1c14', '#f5cc4a', false)
+    this.drawGuest(ctx, 264, 0, '#f7d0b5', '#2d5380', '#8a1c14', '#f5cc4a', true)
 
     this.textures.addSpriteSheet('party-guests', canvas as any, { frameWidth: 24, frameHeight: 28 })
   }
