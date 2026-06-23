@@ -96,10 +96,6 @@ export class WorldScene extends Phaser.Scene {
     wtPatch.fillRect(1184, 182, 76, 138)
     wtPatch.fillRect(1445, 182, 77, 138)
 
-    // Overlay the Wunderman Thompson building (centered in its Tiled box)
-    const wtBuilding = this.add.image(1260, 62, 'wunderman-thompson-building').setOrigin(0).setDepth(5)
-    wtBuilding.setDisplaySize(185, 258)
-
     // Cover the pre-painted Armando Testa bottom sign text with a cream-colored patch
     const atPatch = this.add.graphics().setDepth(1)
     atPatch.fillStyle(0xd5bc9a, 1)
@@ -113,61 +109,110 @@ export class WorldScene extends Phaser.Scene {
     // Create static physics group for all new solid location details
     const obstacleGroup = this.physics.add.staticGroup()
 
-    // 1. SG Company - Aperitif Party
-    const guest1 = this.physics.add.sprite(732, 325, 'party-guests').setDepth(12)
-    guest1.anims.play('alex-talk')
-    obstacleGroup.add(guest1)
-    const g1Body = guest1.body as Phaser.Physics.Arcade.Body
-    g1Body.setSize(18, 12).setOffset(3, 16)
-    guest1.refreshBody()
+    // 1. SG Company - Event Stage, Spotlights, and Crowd
+    const stage = this.physics.add.image(750, 240, 'event-stage').setDepth(5)
+    stage.setDisplaySize(180, 120)
+    obstacleGroup.add(stage)
+    stage.refreshBody()
+    const stageBody = stage.body as Phaser.Physics.Arcade.Body
+    stageBody.setSize(160, 80).setOffset(10, 40)
 
-    const guest2 = this.physics.add.sprite(768, 325, 'party-guests').setDepth(12)
-    guest2.anims.play('beatrice-talk')
-    obstacleGroup.add(guest2)
-    const g2Body = guest2.body as Phaser.Physics.Arcade.Body
-    g2Body.setSize(18, 12).setOffset(3, 16)
-    guest2.refreshBody()
+    // Draw 2 rotating spotlight beams
+    const spotlight1 = this.add.graphics().setDepth(21).setAlpha(0.3)
+    const spotlight2 = this.add.graphics().setDepth(21).setAlpha(0.3)
 
-    const guest3 = this.physics.add.sprite(750, 340, 'party-guests').setDepth(12)
-    guest3.anims.play('carlo-talk')
-    obstacleGroup.add(guest3)
-    const g3Body = guest3.body as Phaser.Physics.Arcade.Body
-    g3Body.setSize(18, 12).setOffset(3, 16)
-    guest3.refreshBody()
+    this.tweens.add({
+      targets: { angle: -15 },
+      angle: 15,
+      duration: 2500,
+      yoyo: true,
+      repeat: -1,
+      ease: 'Sine.easeInOut',
+      onUpdate: (tween) => {
+        const val1 = (tween.getValue() ?? 0) as number
+        spotlight1.clear().fillStyle(0xfff59e, 1)
+        spotlight1.slice(680, 190, 120, Phaser.Math.DegToRad(75 + val1), Phaser.Math.DegToRad(105 + val1), false).fillPath()
 
-    const table = this.physics.add.image(750, 320, 'party-table').setDepth(11)
-    obstacleGroup.add(table)
-    const tBody = table.body as Phaser.Physics.Arcade.Body
-    tBody.setSize(16, 12).setOffset(4, 16)
-    table.refreshBody()
+        const val2 = -val1
+        spotlight2.clear().fillStyle(0x9ee0ff, 1)
+        spotlight2.slice(820, 190, 120, Phaser.Math.DegToRad(75 + val2), Phaser.Math.DegToRad(105 + val2), false).fillPath()
+      }
+    })
 
-    // 2. Armando Testa - Punt e Mes & Blue Hippo
-    const pem = this.physics.add.image(180, 740, 'punt-e-mes').setDepth(12)
-    pem.setDisplaySize(48, 63)
-    obstacleGroup.add(pem)
-    pem.refreshBody()
-    const pemBody = pem.body as Phaser.Physics.Arcade.Body
-    pemBody.setSize(36, 24).setOffset(6, 39)
-    pem.refreshBody()
+    // Spawn 6 animated guests dancing/talking
+    const guestConfigs = [
+      { x: 690, y: 320, anim: 'alex-talk' },
+      { x: 715, y: 310, anim: 'beatrice-talk' },
+      { x: 740, y: 325, anim: 'carlo-talk' },
+      { x: 765, y: 315, anim: 'diana-talk' },
+      { x: 790, y: 330, anim: 'enzo-talk' },
+      { x: 815, y: 310, anim: 'francesca-talk' }
+    ]
+    guestConfigs.forEach(({ x, y, anim }, index) => {
+      const guest = this.physics.add.sprite(x, y, 'party-guests').setDepth(12)
+      guest.anims.play(anim)
+      obstacleGroup.add(guest)
+      guest.refreshBody()
+      const gBody = guest.body as Phaser.Physics.Arcade.Body
+      gBody.setSize(18, 12).setOffset(3, 16)
 
-    const hippo = this.physics.add.image(360, 740, 'blue-hippo').setDepth(12)
+      // Add a dancing/bobbing tween for half of the crowd
+      if (index % 2 === 0) {
+        this.tweens.add({
+          targets: guest,
+          y: y - 3,
+          duration: 350 + (index * 40),
+          yoyo: true,
+          repeat: -1,
+          ease: 'Sine.easeInOut'
+        })
+      }
+    })
+
+    // 2. Armando Testa - Punt e Mes Building & Blue Hippo
+    const puntEMesBuilding = this.physics.add.image(260, 680, 'punt-e-mes-building').setDepth(12)
+    puntEMesBuilding.setDisplaySize(150, 200)
+    obstacleGroup.add(puntEMesBuilding)
+    puntEMesBuilding.refreshBody()
+    const pemBBody = puntEMesBuilding.body as Phaser.Physics.Arcade.Body
+    pemBBody.setSize(110, 80).setOffset(20, 120)
+
+    const hippo = this.physics.add.image(350, 750, 'blue-hippo').setDepth(12)
     hippo.setDisplaySize(72, 72)
     obstacleGroup.add(hippo)
     hippo.refreshBody()
     const hippoBody = hippo.body as Phaser.Physics.Arcade.Body
     hippoBody.setSize(54, 30).setOffset(9, 42)
-    hippo.refreshBody()
 
     this.tweens.add({
       targets: hippo,
-      angle: { from: -3, to: 3 },
-      duration: 1200,
+      angle: { from: -2, to: 2 },
+      scaleX: { from: 0.98, to: 1.02 },
+      duration: 1500,
       yoyo: true,
       repeat: -1,
       ease: 'Sine.easeInOut'
     })
 
-    // 3. Dentsu - Japanese Garden
+    // 3. Wunderman Thompson - Windmill & Rotation
+    const windmillBody = this.physics.add.image(1352, 191, 'windmill-body').setOrigin(0.5).setDepth(5)
+    windmillBody.setDisplaySize(120, 150)
+    obstacleGroup.add(windmillBody)
+    windmillBody.refreshBody()
+    const wmBody = windmillBody.body as Phaser.Physics.Arcade.Body
+    wmBody.setSize(80, 50).setOffset(20, 100)
+
+    const windmillBlades = this.add.image(1352, 116, 'windmill-blades').setOrigin(0.5).setDepth(6)
+    windmillBlades.setDisplaySize(100, 100)
+    this.tweens.add({
+      targets: windmillBlades,
+      angle: 360,
+      duration: 6000,
+      repeat: -1,
+      ease: 'Linear'
+    })
+
+    // 4. Dentsu - Japanese Garden & Cherry Trees
     const maple = this.physics.add.image(710, 730, 'japanese-maple').setDepth(15)
     maple.setDisplaySize(64, 64)
     obstacleGroup.add(maple)
@@ -191,6 +236,21 @@ export class WorldScene extends Phaser.Scene {
     const lanternBody = lantern.body as Phaser.Physics.Arcade.Body
     lanternBody.setSize(16, 12).setOffset(4, 24)
     lantern.refreshBody()
+
+    // Place cherry trees around Dentsu garden
+    const cherryTrees = [
+      { x: 650, y: 740 },
+      { x: 800, y: 715 },
+      { x: 930, y: 760 }
+    ]
+    cherryTrees.forEach(({ x, y }) => {
+      const tree = this.physics.add.image(x, y, 'cherry-tree').setDepth(15)
+      tree.setDisplaySize(64, 64)
+      obstacleGroup.add(tree)
+      tree.refreshBody()
+      const treeBody = tree.body as Phaser.Physics.Arcade.Body
+      treeBody.setSize(24, 16).setOffset(20, 48)
+    })
 
     // Draw Zen Garden Stepping Stones and Bamboo Fences
     const gardenGraphics = this.add.graphics().setDepth(10)
