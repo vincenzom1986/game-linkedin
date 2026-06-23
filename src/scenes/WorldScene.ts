@@ -116,28 +116,50 @@ export class WorldScene extends Phaser.Scene {
     const obstacleGroup = this.physics.add.staticGroup()
 
     // 1. SG Company - Aperitif Party
-    const party = this.physics.add.sprite(750, 330, 'sg-party').setDepth(12)
-    party.setDisplaySize(64, 48)
-    obstacleGroup.add(party)
-    party.refreshBody()
-    const partyBody = party.body as Phaser.Physics.Arcade.Body
-    partyBody.setSize(48, 16).setOffset(8, 32)
-    party.anims.play('party-idle')
+    const guest1 = this.physics.add.sprite(732, 325, 'party-guests').setDepth(12)
+    guest1.anims.play('alex-talk')
+    obstacleGroup.add(guest1)
+    const g1Body = guest1.body as Phaser.Physics.Arcade.Body
+    g1Body.setSize(18, 12).setOffset(3, 16)
+    guest1.refreshBody()
+
+    const guest2 = this.physics.add.sprite(768, 325, 'party-guests').setDepth(12)
+    guest2.anims.play('beatrice-talk')
+    obstacleGroup.add(guest2)
+    const g2Body = guest2.body as Phaser.Physics.Arcade.Body
+    g2Body.setSize(18, 12).setOffset(3, 16)
+    guest2.refreshBody()
+
+    const guest3 = this.physics.add.sprite(750, 340, 'party-guests').setDepth(12)
+    guest3.anims.play('carlo-talk')
+    obstacleGroup.add(guest3)
+    const g3Body = guest3.body as Phaser.Physics.Arcade.Body
+    g3Body.setSize(18, 12).setOffset(3, 16)
+    guest3.refreshBody()
+
+    const table = this.physics.add.image(750, 320, 'party-table').setDepth(11)
+    obstacleGroup.add(table)
+    const tBody = table.body as Phaser.Physics.Arcade.Body
+    tBody.setSize(16, 12).setOffset(4, 16)
+    table.refreshBody()
 
     // 2. Armando Testa - Punt e Mes & Blue Hippo
-    const pem = this.physics.add.image(210, 740, 'punt-e-mes').setDepth(12)
-    pem.setDisplaySize(32, 42)
+    const pem = this.physics.add.image(180, 740, 'punt-e-mes').setDepth(12)
+    pem.setDisplaySize(48, 63)
     obstacleGroup.add(pem)
     pem.refreshBody()
     const pemBody = pem.body as Phaser.Physics.Arcade.Body
-    pemBody.setSize(24, 16).setOffset(4, 26)
+    pemBody.setSize(36, 24).setOffset(6, 39)
+    pem.refreshBody()
 
-    const hippo = this.physics.add.image(370, 740, 'blue-hippo').setDepth(12)
-    hippo.setDisplaySize(48, 48)
+    const hippo = this.physics.add.image(360, 740, 'blue-hippo').setDepth(12)
+    hippo.setDisplaySize(72, 72)
     obstacleGroup.add(hippo)
     hippo.refreshBody()
     const hippoBody = hippo.body as Phaser.Physics.Arcade.Body
-    hippoBody.setSize(36, 20).setOffset(6, 28)
+    hippoBody.setSize(54, 30).setOffset(9, 42)
+    hippo.refreshBody()
+
     this.tweens.add({
       targets: hippo,
       angle: { from: -3, to: 3 },
@@ -148,19 +170,21 @@ export class WorldScene extends Phaser.Scene {
     })
 
     // 3. Dentsu - Japanese Garden
-    const maple = this.physics.add.image(710, 740, 'japanese-maple').setDepth(15)
+    const maple = this.physics.add.image(710, 730, 'japanese-maple').setDepth(15)
     maple.setDisplaySize(64, 64)
     obstacleGroup.add(maple)
     maple.refreshBody()
     const mapleBody = maple.body as Phaser.Physics.Arcade.Body
     mapleBody.setSize(24, 16).setOffset(20, 48)
+    maple.refreshBody()
 
-    const pond = this.physics.add.image(750, 820, 'koi-pond').setDepth(11)
+    const pond = this.physics.add.image(880, 800, 'koi-pond').setDepth(11)
     pond.setDisplaySize(64, 64)
     obstacleGroup.add(pond)
     pond.refreshBody()
     const pondBody = pond.body as Phaser.Physics.Arcade.Body
     pondBody.setSize(56, 40).setOffset(4, 12)
+    pond.refreshBody()
 
     const lantern = this.physics.add.image(890, 745, 'stone-lantern').setDepth(12)
     lantern.setDisplaySize(24, 36)
@@ -168,6 +192,27 @@ export class WorldScene extends Phaser.Scene {
     lantern.refreshBody()
     const lanternBody = lantern.body as Phaser.Physics.Arcade.Body
     lanternBody.setSize(16, 12).setOffset(4, 24)
+    lantern.refreshBody()
+
+    // Draw Zen Garden Stepping Stones and Bamboo Fences
+    const gardenGraphics = this.add.graphics().setDepth(10)
+    gardenGraphics.fillStyle(0x8a8a8a, 1)
+    gardenGraphics.fillEllipse(770, 760, 6, 4)
+    gardenGraphics.fillEllipse(795, 775, 8, 5)
+    gardenGraphics.fillEllipse(820, 790, 7, 4)
+    gardenGraphics.fillEllipse(845, 805, 8, 5)
+
+    gardenGraphics.lineStyle(1.5, 0x556b2f, 0.8)
+    gardenGraphics.beginPath()
+    // Left fence
+    gardenGraphics.moveTo(680, 715)
+    gardenGraphics.lineTo(740, 715)
+    gardenGraphics.lineTo(740, 765)
+    // Right fence
+    gardenGraphics.moveTo(850, 735)
+    gardenGraphics.lineTo(900, 735)
+    gardenGraphics.lineTo(900, 770)
+    gardenGraphics.strokePath()
 
     // Maple leaves emitter
     const leafColors = ['leaf-red', 'leaf-orange', 'leaf-bordeaux']
