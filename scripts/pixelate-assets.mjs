@@ -1,5 +1,6 @@
 import fs from 'fs';
 import { PNG } from 'pngjs';
+import jpeg from 'jpeg-js';
 
 const rules = {
   'flying-cow.png': (r, g, b) => {
@@ -11,24 +12,19 @@ const rules = {
     return desat && r > 210;
   },
   'punt-e-mes.png': (r, g, b) => {
-    return r > 240 && g > 240 && b > 240;
+    return r <= 10 && g <= 10 && b <= 10;
   },
   'blue-hippo.png': (r, g, b) => {
-    const desat = Math.abs(r - g) <= 8 && Math.abs(g - b) <= 8 && Math.abs(r - b) <= 8;
-    return desat && r > 100;
+    return r <= 10 && g <= 10 && b <= 10;
   },
   'japanese-maple.png': (r, g, b) => {
-    const desat = Math.abs(r - g) <= 8 && Math.abs(g - b) <= 8 && Math.abs(r - b) <= 8;
-    return desat && r > 200;
+    return r <= 10 && g <= 10 && b <= 10;
   },
   'stone-lantern.png': (r, g, b) => {
-    return r > 240 && g > 240 && b > 240;
+    return r <= 10 && g <= 10 && b <= 10;
   },
   'koi-pond.png': (r, g, b) => {
-    const desat = Math.abs(r - g) <= 8 && Math.abs(g - b) <= 8 && Math.abs(r - b) <= 8;
-    const isWhiteCheck = r > 240 && g > 240 && b > 240;
-    const isGreyCheck = Math.abs(r - 192) <= 8 && Math.abs(g - 192) <= 8 && Math.abs(b - 192) <= 8;
-    return desat && (isWhiteCheck || isGreyCheck);
+    return r <= 10 && g <= 10 && b <= 10;
   },
   'ey-skyscraper.png': (r, g, b) => {
     const desat = Math.abs(r - g) <= 8 && Math.abs(g - b) <= 8 && Math.abs(r - b) <= 8;
@@ -49,17 +45,17 @@ const rules = {
 };
 
 const targets = {
-  'flying-cow.png': { w: 64, h: 64 },
-  'punt-e-mes.png': { w: 32, h: 42 },
-  'blue-hippo.png': { w: 48, h: 48 },
-  'japanese-maple.png': { w: 64, h: 64 },
-  'stone-lantern.png': { w: 24, h: 36 },
-  'koi-pond.png': { w: 64, h: 64 },
-  'ey-skyscraper.png': { w: 378, h: 298 },
-  'the-big-now.png': { w: 50, h: 22 },
-  'armando-testa.png': { w: 50, h: 22 },
-  'sg-holding.png': { w: 50, h: 22 },
-  'wunderman-thompson.png': { w: 50, h: 22 }
+  'flying-cow.png': { maxW: 64, maxH: 64 },
+  'punt-e-mes.png': { maxW: 48, maxH: 63 },
+  'blue-hippo.png': { maxW: 72, maxH: 72 },
+  'japanese-maple.png': { maxW: 64, maxH: 64 },
+  'stone-lantern.png': { maxW: 24, maxH: 36 },
+  'koi-pond.png': { maxW: 64, maxH: 64 },
+  'ey-skyscraper.png': { maxW: 378, maxH: 298 },
+  'the-big-now.png': { maxW: 50, maxH: 22 },
+  'armando-testa.png': { maxW: 50, maxH: 22 },
+  'sg-holding.png': { maxW: 50, maxH: 22 },
+  'wunderman-thompson.png': { maxW: 50, maxH: 22 }
 };
 
 // Flood-fill BFS to clean background connected to the borders
@@ -234,19 +230,34 @@ async function processFile(file) {
     return;
   }
 
-  // Load via async parser to handle corrupt/trailing bytes gracefully
-  const srcPng = await new Promise((resolve, reject) => {
-    const parser = new PNG();
-    parser.parse(fileData, (error, parsedData) => {
-      if (parsedData && parsedData.width && parsedData.height) {
-        resolve(parsedData);
-      } else if (error) {
-        reject(error);
-      } else {
-        reject(new Error('No data parsed'));
-      }
+  // Load via async parser or jpeg-js depending on format
+  const isJpeg = fileData[0] === 0xFF && fileData[1] === 0xD8;
+  let srcPng;
+  if (isJpeg) {
+    console.log(`  Detected JPEG format for ${file}. Decoding and converting to PNG...`);
+    try {
+      const decoded = jpeg.decode(fileData);
+      srcPng = new PNG({ width: decoded.width, height: decoded.height });
+      srcPng.data = decoded.data;
+    } catch (e) {
+      console.error(`Failed to decode JPEG ${file}: ${e.message}`);
+      return;
+    }
+  } else {
+    // Load via async parser to handle corrupt/trailing bytes gracefully
+    srcPng = await new Promise((resolve, reject) => {
+      const parser = new PNG();
+      parser.parse(fileData, (error, parsedData) => {
+        if (parsedData && parsedData.width && parsedData.height) {
+          resolve(parsedData);
+        } else if (error) {
+          reject(error);
+        } else {
+          reject(new Error('No data parsed'));
+        }
+      });
     });
-  });
+  }
 
   if (file === 'sg-party.png') {
     // Spritesheet: 3 frames side-by-side. Original is 1024x341, so each frame is 341px wide.
@@ -279,8 +290,18 @@ async function processFile(file) {
       return;
     }
 
-    console.log(`  Downsampling to ${target.w}x${target.h} using nearest-neighbor...`);
-    let resized = resizeNearest(srcPng, target.w, target.h);
+    let dstW, dstH;
+    if (target.maxW && target.maxH) {
+      const scale = Math.min(target.maxW / srcPng.width, target.maxH / srcPng.height);
+      dstW = Math.max(1, Math.round(srcPng.width * scale));
+      dstH = Math.max(1, Math.round(srcPng.height * scale));
+    } else {
+      dstW = target.w;
+      dstH = target.h;
+    }
+
+    console.log(`  Downsampling to ${dstW}x${dstH} (max: ${target.maxW || target.w}x${target.maxH || target.h}) using nearest-neighbor...`);
+    let resized = resizeNearest(srcPng, dstW, dstH);
 
     // Apply outline for actual game assets, but NOT for building facades (like ey-skyscraper) or billboard logos
     if (file !== 'ey-skyscraper.png' && !['the-big-now.png', 'armando-testa.png', 'sg-holding.png', 'wunderman-thompson.png'].includes(file)) {
