@@ -26,6 +26,7 @@ export class PreloadScene extends Phaser.Scene {
     this.load.image('stone-lantern', 'assets/logos/stone-lantern.png')
     this.load.image('koi-pond', 'assets/logos/koi-pond.png')
     this.load.image('ey-skyscraper', 'assets/logos/ey-skyscraper.png')
+    this.load.image('dentsu-building', 'assets/logos/dentsu-building.png')
   }
 
   create(): void {

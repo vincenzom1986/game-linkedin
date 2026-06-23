@@ -41,6 +41,10 @@ const rules = {
   },
   'wunderman-thompson.png': (r, g, b) => {
     return r > 240 && g > 240 && b > 240;
+  },
+  'dentsu-building.png': (r, g, b) => {
+    const desat = Math.abs(r - g) <= 5 && Math.abs(g - b) <= 5 && Math.abs(r - b) <= 5;
+    return desat && r >= 170 && r <= 210;
   }
 };
 
@@ -55,7 +59,8 @@ const targets = {
   'the-big-now.png': { maxW: 50, maxH: 22 },
   'armando-testa.png': { maxW: 50, maxH: 22 },
   'sg-holding.png': { maxW: 50, maxH: 22 },
-  'wunderman-thompson.png': { maxW: 50, maxH: 22 }
+  'wunderman-thompson.png': { maxW: 50, maxH: 22 },
+  'dentsu-building.png': { maxW: 338, maxH: 234 }
 };
 
 // Flood-fill BFS to clean background connected to the borders
@@ -303,8 +308,8 @@ async function processFile(file) {
     console.log(`  Downsampling to ${dstW}x${dstH} (max: ${target.maxW || target.w}x${target.maxH || target.h}) using nearest-neighbor...`);
     let resized = resizeNearest(srcPng, dstW, dstH);
 
-    // Apply outline for actual game assets, but NOT for building facades (like ey-skyscraper) or billboard logos
-    if (file !== 'ey-skyscraper.png' && !['the-big-now.png', 'armando-testa.png', 'sg-holding.png', 'wunderman-thompson.png'].includes(file)) {
+    // Apply outline for actual game assets, but NOT for building facades (like ey-skyscraper, dentsu-building) or billboard logos
+    if (file !== 'ey-skyscraper.png' && file !== 'dentsu-building.png' && !['the-big-now.png', 'armando-testa.png', 'sg-holding.png', 'wunderman-thompson.png'].includes(file)) {
       addOutline(resized);
       console.log(`  Added retro pixel outline.`);
     }
