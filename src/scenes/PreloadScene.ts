@@ -30,6 +30,8 @@ export class PreloadScene extends Phaser.Scene {
 
   create(): void {
     this.createHeroSpritesheet()
+    this.createPartyGuestsSpritesheet()
+    this.createPartyTableTexture()
     this.createAnimations()
     this.createRuntimeTextures()
     this.scene.start('world')
@@ -271,6 +273,30 @@ export class PreloadScene extends Phaser.Scene {
       frameRate: 4,
       repeat: -1,
     })
+
+    this.anims.create({
+      key: 'alex-talk',
+      frames: this.anims.generateFrameNumbers('party-guests', { start: 0, end: 1 }),
+      frameRate: 3,
+      repeat: -1,
+      yoyo: true
+    })
+
+    this.anims.create({
+      key: 'beatrice-talk',
+      frames: this.anims.generateFrameNumbers('party-guests', { start: 2, end: 3 }),
+      frameRate: 4,
+      repeat: -1,
+      yoyo: true
+    })
+
+    this.anims.create({
+      key: 'carlo-talk',
+      frames: this.anims.generateFrameNumbers('party-guests', { start: 4, end: 5 }),
+      frameRate: 3,
+      repeat: -1,
+      yoyo: true
+    })
   }
 
   private createRuntimeTextures(): void {
@@ -326,5 +352,82 @@ export class PreloadScene extends Phaser.Scene {
       ctx.fillRect(0, 0, 2, 2);
       canvas?.refresh();
     }
+  }
+
+  private createPartyGuestsSpritesheet(): void {
+    const canvas = document.createElement('canvas')
+    canvas.width = 144
+    canvas.height = 28
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    // Guest 1 (Alex) - Frame 0 & 1
+    this.drawGuest(ctx, 0, 0, '#f7d0b5', '#2d5380', '#8a5a36', '#111111', false)
+    this.drawGuest(ctx, 24, 0, '#f7d0b5', '#2d5380', '#8a5a36', '#111111', true)
+
+    // Guest 2 (Beatrice) - Frame 0 & 1
+    this.drawGuest(ctx, 48, 0, '#f1c2a2', '#8a1c14', '#8a1c14', '#e6c280', false)
+    this.drawGuest(ctx, 72, 0, '#f1c2a2', '#8a1c14', '#8a1c14', '#e6c280', true)
+
+    // Guest 3 (Carlo) - Frame 0 & 1
+    this.drawGuest(ctx, 96, 0, '#e5b290', '#2d3b2d', '#5a5c5a', '#222222', false)
+    this.drawGuest(ctx, 120, 0, '#e5b290', '#2d3b2d', '#5a5c5a', '#222222', true)
+
+    this.textures.addSpriteSheet('party-guests', canvas as any, { frameWidth: 24, frameHeight: 28 })
+  }
+
+  private drawGuest(
+    ctx: CanvasRenderingContext2D,
+    fx: number,
+    fy: number,
+    skin: string,
+    shirt: string,
+    pants: string,
+    hair: string,
+    bob: boolean
+  ): void {
+    const yOffset = bob ? 1 : 0
+    
+    // Hair
+    ctx.fillStyle = hair
+    ctx.fillRect(fx + 7, fy + 0 + yOffset, 10, 3)
+    
+    // Head
+    ctx.fillStyle = skin
+    ctx.fillRect(fx + 7, fy + 3 + yOffset, 10, 7)
+    
+    // Glasses
+    ctx.fillStyle = '#0d0d0d'
+    ctx.fillRect(fx + 9, fy + 5 + yOffset, 2, 2)
+    ctx.fillRect(fx + 13, fy + 5 + yOffset, 2, 2)
+
+    // Shirt/Dress
+    ctx.fillStyle = shirt
+    ctx.fillRect(fx + 5, fy + 10 + yOffset, 14, 12)
+
+    // Legs
+    ctx.fillStyle = pants
+    ctx.fillRect(fx + 7, fy + 22, 4, 6)
+    ctx.fillRect(fx + 13, fy + 22, 4, 6)
+  }
+
+  private createPartyTableTexture(): void {
+    const canvas = document.createElement('canvas')
+    canvas.width = 24
+    canvas.height = 28
+    const tCtx = canvas.getContext('2d')
+    if (tCtx) {
+      tCtx.fillStyle = '#68573e' // brown legs
+      tCtx.fillRect(11, 14, 2, 14)
+      tCtx.fillStyle = '#d98b51' // tabletop border
+      tCtx.fillRect(4, 8, 16, 6)
+      tCtx.fillStyle = '#f5cc4a' // tablecloth
+      tCtx.fillRect(6, 6, 12, 4)
+      tCtx.fillStyle = '#8a1c14' // red drink cup
+      tCtx.fillRect(9, 3, 2, 3)
+      tCtx.fillStyle = '#2d5380' // blue drink cup
+      tCtx.fillRect(13, 3, 2, 3)
+    }
+    this.textures.addCanvas('party-table', canvas)
   }
 }
