@@ -87,6 +87,19 @@ export class WorldScene extends Phaser.Scene {
     const dentsuBuilding = this.add.image(708, 504, 'dentsu-building').setOrigin(0).setDepth(5)
     dentsuBuilding.setDisplaySize(234, 234)
 
+    // Cover the left and right sides of the old Wunderman Thompson building to erase it completely
+    const wtPatch = this.add.graphics().setDepth(4)
+    wtPatch.fillStyle(0x4a493d, 1)
+    wtPatch.fillRect(1184, 62, 76, 120)
+    wtPatch.fillRect(1445, 62, 77, 120)
+    wtPatch.fillStyle(0x5a804d, 1)
+    wtPatch.fillRect(1184, 182, 76, 138)
+    wtPatch.fillRect(1445, 182, 77, 138)
+
+    // Overlay the Wunderman Thompson building (centered in its Tiled box)
+    const wtBuilding = this.add.image(1260, 62, 'wunderman-thompson-building').setOrigin(0).setDepth(5)
+    wtBuilding.setDisplaySize(185, 258)
+
     // Cover the pre-painted Armando Testa bottom sign text with a cream-colored patch
     const atPatch = this.add.graphics().setDepth(1)
     atPatch.fillStyle(0xd5bc9a, 1)
