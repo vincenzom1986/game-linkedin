@@ -12,19 +12,19 @@ const rules = {
     return desat && r > 210;
   },
   'punt-e-mes.png': (r, g, b) => {
-    return r <= 10 && g <= 10 && b <= 10;
+    return r <= 40 && g <= 40 && b <= 40;
   },
   'blue-hippo.png': (r, g, b) => {
-    return r <= 10 && g <= 10 && b <= 10;
+    return r <= 40 && g <= 40 && b <= 40;
   },
   'japanese-maple.png': (r, g, b) => {
-    return r <= 10 && g <= 10 && b <= 10;
+    return r <= 40 && g <= 40 && b <= 40;
   },
   'stone-lantern.png': (r, g, b) => {
-    return r <= 10 && g <= 10 && b <= 10;
+    return r <= 40 && g <= 40 && b <= 40;
   },
   'koi-pond.png': (r, g, b) => {
-    return r <= 10 && g <= 10 && b <= 10;
+    return r <= 40 && g <= 40 && b <= 40;
   },
   'ey-skyscraper.png': (r, g, b) => {
     const desat = Math.abs(r - g) <= 8 && Math.abs(g - b) <= 8 && Math.abs(r - b) <= 8;
@@ -50,19 +50,19 @@ const rules = {
     return r > 240 && g > 240 && b > 240;
   },
   'cherry-tree.png': (r, g, b) => {
-    return r <= 10 && g <= 10 && b <= 10;
+    return r <= 40 && g <= 40 && b <= 40;
   },
   'windmill-body.png': (r, g, b) => {
-    return r <= 10 && g <= 10 && b <= 10;
+    return r <= 40 && g <= 40 && b <= 40;
   },
   'windmill-blades.png': (r, g, b) => {
-    return r <= 10 && g <= 10 && b <= 10;
+    return r <= 40 && g <= 40 && b <= 40;
   },
   'punt-e-mes-building.png': (r, g, b) => {
-    return r <= 10 && g <= 10 && b <= 10;
+    return r <= 40 && g <= 40 && b <= 40;
   },
   'event-stage.png': (r, g, b) => {
-    return r <= 10 && g <= 10 && b <= 10;
+    return r <= 40 && g <= 40 && b <= 40;
   }
 };
 
