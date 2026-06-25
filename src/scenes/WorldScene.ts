@@ -3,7 +3,6 @@ import { careerData } from '../data/career'
 import type { Location } from '../data/types'
 import { nearestInteraction } from '../systems/InteractionSystem'
 import { JournalState } from '../systems/JournalState'
-import { movementVector } from '../systems/MovementSystem'
 import { resolveLocationRef } from '../systems/WorldResolver'
 import { fitWithin } from '../ui/fitWithin'
 
@@ -91,7 +90,7 @@ export class WorldScene extends Phaser.Scene {
 
     // Render company logo overlays
     for (const object of entities.filter(({ type }) => type === 'location')) {
-      this.renderLocationLogo(object, resolveLocationRef(object, careerData))
+      this.renderLocationLogo(resolveLocationRef(object, careerData))
     }
 
     // Create static physics group for all new solid location details
@@ -207,7 +206,6 @@ export class WorldScene extends Phaser.Scene {
     maple.refreshBody()
     const mapleBody = maple.body as Phaser.Physics.Arcade.Body
     mapleBody.setSize(24, 16).setOffset(20, 48)
-    maple.refreshBody()
 
     const pond = this.physics.add.image(880, 800, 'koi-pond').setDepth(11)
     pond.setDisplaySize(64, 64)
@@ -215,7 +213,6 @@ export class WorldScene extends Phaser.Scene {
     pond.refreshBody()
     const pondBody = pond.body as Phaser.Physics.Arcade.Body
     pondBody.setSize(56, 40).setOffset(4, 12)
-    pond.refreshBody()
 
     const lantern = this.physics.add.image(890, 745, 'stone-lantern').setDepth(12)
     lantern.setDisplaySize(24, 36)
@@ -223,7 +220,6 @@ export class WorldScene extends Phaser.Scene {
     lantern.refreshBody()
     const lanternBody = lantern.body as Phaser.Physics.Arcade.Body
     lanternBody.setSize(16, 12).setOffset(4, 24)
-    lantern.refreshBody()
 
     // Place cherry trees around Dentsu garden
     const cherryTrees = [
@@ -315,8 +311,8 @@ export class WorldScene extends Phaser.Scene {
 
     // Sparse Global Fireflies
     const fireflyEmitter = this.add.particles(0, 0, 'firefly', {
-      x: { min: 0, max: 1600 }, // Full map width
-      y: { min: 0, max: 1200 }, // Full map height
+      x: { min: 0, max: worldWidth }, // Full map width
+      y: { min: 0, max: worldHeight }, // Full map height
       speedY: { min: -10, max: 10 },
       speedX: { min: -15, max: 15 },
       scale: { start: 0.5, end: 1 },
@@ -339,6 +335,15 @@ export class WorldScene extends Phaser.Scene {
     body.setDrag(1200, 1200)
 
     this.createColliders(map)
+    // physics.add.image/sprite create DYNAMIC bodies, and adding them to a static
+    // group does not convert them (Phaser only enables a static body when none
+    // exists). Without this they would be shoved across the map when the player
+    // walks into them, so force every decorative obstacle to behave as solid.
+    obstacleGroup.getChildren().forEach((child) => {
+      const obstacleBody = (child as Phaser.Physics.Arcade.Image).body as Phaser.Physics.Arcade.Body
+      obstacleBody.setImmovable(true)
+      obstacleBody.moves = false
+    })
     this.physics.add.collider(this.player, obstacleGroup)
     this.physics.world.setBounds(0, 0, worldWidth, worldHeight)
     this.cameras.main.setBounds(0, 0, worldWidth, worldHeight)
@@ -370,10 +375,6 @@ export class WorldScene extends Phaser.Scene {
     this.registry.set('panel-open', false)
     this.registry.set('touch-vector', { x: 0, y: 0 })
     this.registry.set('touch-action', false)
-    this.input.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
-      const worldPoint = this.cameras.main.getWorldPoint(pointer.x, pointer.y)
-      console.log(`Clicked X: ${Math.round(worldPoint.x)}, Y: ${Math.round(worldPoint.y)}`)
-    })
     this.createInteractionPrompt()
     this.scene.launch('ui')
     this.game.events.emit('journal:update', this.journal.snapshot())
@@ -381,6 +382,12 @@ export class WorldScene extends Phaser.Scene {
 
   update(): void {
     const body = this.player.body as Phaser.Physics.Arcade.Body
+
+    // Clear any (possibly stale) touch action every frame — e.g. a tap that landed
+    // on the hidden action button while the panel was open — so it cannot trigger
+    // an interaction the moment the panel closes.
+    const touchAction = this.registry.get('touch-action') === true
+    if (touchAction) this.registry.set('touch-action', false)
 
     if (this.registry.get('panel-open') === true) {
       body.setAcceleration(0, 0)
@@ -450,7 +457,6 @@ export class WorldScene extends Phaser.Scene {
       this.interactions,
       INTERACTION_DISTANCE,
     )
-    this.game.events.emit('interaction:prompt', Boolean(target))
 
     const shouldShow = Boolean(target) && (this.registry.get('panel-open') !== true)
 
@@ -473,8 +479,6 @@ export class WorldScene extends Phaser.Scene {
     }
 
     const keyboardAction = this.actionKeys.some((key) => Phaser.Input.Keyboard.JustDown(key))
-    const touchAction = this.registry.get('touch-action') === true
-    if (touchAction) this.registry.set('touch-action', false)
     if (!target || (!keyboardAction && !touchAction)) return
 
     if (target.kind === 'contact') {
@@ -511,7 +515,7 @@ export class WorldScene extends Phaser.Scene {
     else if (this.facingDirection === 'right') this.player.setFrame(9)
   }
 
-  private renderLocationLogo(object: TiledObject, location: Location): void {
+  private renderLocationLogo(location: Location): void {
     const coord = billboardCenters[location.id]
     if (!coord) return
 

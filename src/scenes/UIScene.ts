@@ -8,7 +8,6 @@ import { TouchControls } from '../ui/TouchControls'
 import { calculateCharTime, getDisplayedText } from '../ui/typewriter'
 
 export class UIScene extends Phaser.Scene {
-  private prompt!: Phaser.GameObjects.Text
   private progress!: Phaser.GameObjects.Text
   private panel!: Phaser.GameObjects.Container
   private eyebrow!: Phaser.GameObjects.Text
@@ -32,14 +31,6 @@ export class UIScene extends Phaser.Scene {
   }
 
   create(): void {
-    this.prompt = this.add.text(480, 494, 'SPAZIO / INVIO — ESPLORA', {
-      fontFamily: 'monospace',
-      fontSize: '17px',
-      color: '#fff4cc',
-      backgroundColor: '#172a1fee',
-      padding: { x: 16, y: 10 },
-    }).setOrigin(0.5).setScrollFactor(0).setDepth(100).setVisible(false)
-
     this.progress = this.add.text(24, 20, 'SEDI 0 / 6', {
       fontFamily: 'monospace',
       fontSize: '17px',
@@ -51,7 +42,6 @@ export class UIScene extends Phaser.Scene {
     this.panel = this.createPanel()
     this.touchControls = new TouchControls(this)
 
-    this.game.events.on('interaction:prompt', this.onPrompt, this)
     this.game.events.on('location:show', this.showLocation, this)
     this.game.events.on('contact:show', this.showContact, this)
     this.game.events.on('journal:update', this.updateJournal, this)
@@ -125,10 +115,6 @@ export class UIScene extends Phaser.Scene {
     ]).setScrollFactor(0).setDepth(200).setVisible(false)
   }
 
-  private onPrompt(visible: boolean): void {
-    // Replaced by floating prompt in WorldScene
-  }
-
   private showLocation(location: Location): void {
     this.pages = locationPanelPages(location)
     this.pageIndex = 0
@@ -163,7 +149,6 @@ export class UIScene extends Phaser.Scene {
   private openPanel(): void {
     this.tweens.killTweensOf(this.panel)
     this.registry.set('panel-open', true)
-    this.prompt.setVisible(false)
     this.touchControls.setSuppressed(true)
 
     // Reset panel status before animation
@@ -251,7 +236,7 @@ export class UIScene extends Phaser.Scene {
     return false
   }
 
-  private onPointerDown(pointer: Phaser.Input.Pointer, gameObjects: Phaser.GameObjects.GameObject[]): void {
+  private onPointerDown(_pointer: Phaser.Input.Pointer, gameObjects: Phaser.GameObjects.GameObject[]): void {
     if (gameObjects && gameObjects.length > 0) return
     if (this.panel.visible) {
       this.skipTyping()
@@ -309,7 +294,6 @@ export class UIScene extends Phaser.Scene {
   }
 
   private removeListeners(): void {
-    this.game.events.off('interaction:prompt', this.onPrompt, this)
     this.game.events.off('location:show', this.showLocation, this)
     this.game.events.off('contact:show', this.showContact, this)
     this.game.events.off('journal:update', this.updateJournal, this)
