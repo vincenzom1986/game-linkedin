@@ -1,7 +1,7 @@
 # Game-LinkedIn
 
-Prima vertical slice di un portfolio professionale esplorabile come gioco top-down.
-Il visitatore raggiunge una sede, interagisce con la porta e apre il relativo pannello carriera.
+Portfolio professionale esplorabile come gioco top-down.
+Il visitatore percorre la città, raggiunge le sei sedi, interagisce con le porte e apre i relativi pannelli carriera.
 
 ## Requisiti
 
@@ -33,12 +33,11 @@ La build statica viene prodotta in `dist/`.
 
 ## Aggiornare i contenuti
 
-Ruolo, periodo, progetti, skill e contatti vivono esclusivamente in
-`src/data/career.ts`. La sede attuale usa dati dimostrativi e può essere sostituita
-senza modificare le scene di gioco.
+Ruolo, periodo, progetti, skill e contatti delle sei sedi vivono esclusivamente in
+`src/data/career.ts` e possono essere aggiornati senza modificare le scene di gioco.
 
 La geometria della mappa e i riferimenti `refId` vivono in
-`public/maps/first-location.json`.
+`public/maps/career-city.json`.
 
 ## Asset
 

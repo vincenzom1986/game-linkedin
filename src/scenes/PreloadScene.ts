@@ -19,8 +19,6 @@ export class PreloadScene extends Phaser.Scene {
 
     // Load iconic location details and overrides
     this.load.image('flying-cow', 'assets/logos/flying-cow.png')
-    this.load.spritesheet('sg-party', 'assets/logos/sg-party.png', { frameWidth: 64, frameHeight: 48 })
-    this.load.image('punt-e-mes', 'assets/logos/punt-e-mes.png')
     this.load.image('blue-hippo', 'assets/logos/blue-hippo.png')
     this.load.image('japanese-maple', 'assets/logos/japanese-maple.png')
     this.load.image('stone-lantern', 'assets/logos/stone-lantern.png')
@@ -37,7 +35,6 @@ export class PreloadScene extends Phaser.Scene {
   create(): void {
     this.createHeroSpritesheet()
     this.createPartyGuestsSpritesheet()
-    this.createPartyTableTexture()
     this.createAnimations()
     this.createRuntimeTextures()
     this.scene.start('world')
@@ -274,13 +271,6 @@ export class PreloadScene extends Phaser.Scene {
     })
 
     this.anims.create({
-      key: 'party-idle',
-      frames: this.anims.generateFrameNumbers('sg-party', { start: 0, end: 2 }),
-      frameRate: 4,
-      repeat: -1,
-    })
-
-    this.anims.create({
       key: 'alex-talk',
       frames: this.anims.generateFrameNumbers('party-guests', { start: 0, end: 1 }),
       frameRate: 3,
@@ -451,25 +441,5 @@ export class PreloadScene extends Phaser.Scene {
     ctx.fillStyle = pants
     ctx.fillRect(fx + 7, fy + 22, 4, 6)
     ctx.fillRect(fx + 13, fy + 22, 4, 6)
-  }
-
-  private createPartyTableTexture(): void {
-    const canvas = document.createElement('canvas')
-    canvas.width = 24
-    canvas.height = 28
-    const tCtx = canvas.getContext('2d')
-    if (tCtx) {
-      tCtx.fillStyle = '#68573e' // brown legs
-      tCtx.fillRect(11, 14, 2, 14)
-      tCtx.fillStyle = '#d98b51' // tabletop border
-      tCtx.fillRect(4, 8, 16, 6)
-      tCtx.fillStyle = '#f5cc4a' // tablecloth
-      tCtx.fillRect(6, 6, 12, 4)
-      tCtx.fillStyle = '#8a1c14' // red drink cup
-      tCtx.fillRect(9, 3, 2, 3)
-      tCtx.fillStyle = '#2d5380' // blue drink cup
-      tCtx.fillRect(13, 3, 2, 3)
-    }
-    this.textures.addCanvas('party-table', canvas)
   }
 }
